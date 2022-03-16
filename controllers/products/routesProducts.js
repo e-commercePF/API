@@ -1,10 +1,13 @@
 const productRouter = require('express').Router();
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category')
-const { getProducts, getProductsById, createProduct, deleteProduct } = require('../../controllers/products/productFunctions')
+const { getProducts,getProductByName, getProductsById, createProduct, deleteProduct } = require('../../controllers/products/productFunctions')
 
 // GET || http://localhost:3000/api/products
 productRouter.get('/',getProducts)
+
+// GET || http://localhost:3000/api/products/:name
+productRouter.get('/:name', getProductByName)
 
 // GET || http://localhost:3000/api/products/:id
 productRouter.get('/:id', getProductsById)
