@@ -20,7 +20,21 @@ const getProductsById = (req, res) => {
                 res.status(404).end()
             }
         })// busca nota por id mas facil xd
+ }
+
+const getProductByName = async (req, res) => {
+    const { name } = req.params;
+    const match = await Product.findOne({name});
+
+    if(!match || !name){
+        res.status(404).send({message: 'Something went wrong'})
+    } else {
+        const responseMap = await Product.find({name})
+            
+    
+        res.status(200).send(responseMap);
     }
+}
 
 const createProduct = async (req, res) => {
 
@@ -74,5 +88,6 @@ module.exports = {
     getProducts,
     getProductsById,
     createProduct,
-    deleteProduct
+    deleteProduct,
+    getProductByName
 }
