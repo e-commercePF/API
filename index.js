@@ -7,6 +7,10 @@ const loginRouter = require('./controllers/login')
 const categoryRouter = require('./controllers/category/routesCategories')
 
 // Routes exported here.
+
+
+
+
 app.use('/api/products', productRouter)
 app.use('/api/categories', categoryRouter)
 app.use('/api/users', userRouter);
