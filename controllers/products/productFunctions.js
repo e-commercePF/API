@@ -24,15 +24,14 @@ const getProductsById = (req, res) => {
 
 const getProductByName = async (req, res) => {
     const { name } = req.params;
-    const match = await Product.findOne({name});
+    const match = await Product.find({"name": {'$regex': name, "$options": "i"}});
 
     if(!match || !name){
         res.status(404).send({message: 'Something went wrong'})
     } else {
-        const responseMap = await Product.find({name})
-            
+                  
     
-        res.status(200).send(responseMap);
+        res.status(200).send(match);
     }
 }
 
