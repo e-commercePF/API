@@ -9,10 +9,16 @@ step 3 npm run dev
 GET || http://localhost:3000/api/products
 Returns all products.
 
-GET || http://localhost:3000/api/products/:id
+GET || http://localhost:3000/api/products/id/:id
 ** Pass in params ID = a product ID
 ** e.g: 62316b69af6a67376456cfcd .
 And should return the product by ID
+
+GET || http://localhost:3000/api/products/name/:name
+** Pass in params name = a product name
+** e.g: ... .
+And should return the product by name
+
 
 POST || http://localhost:3000/api/products/create
 Body should contain {
