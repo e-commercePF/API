@@ -7,10 +7,10 @@ const { getProducts,getProductByName, getProductsById, createProduct, deleteProd
 productRouter.get('/',getProducts)
 
 // GET || http://localhost:3000/api/products/:name
-productRouter.get('/:name', getProductByName)
+productRouter.get('/name/:name', getProductByName)
 
 // GET || http://localhost:3000/api/products/:id
-productRouter.get('/:id', getProductsById)
+productRouter.get('/id/:id', getProductsById)
 
 // POST || http://localhost:3000/api/products/create
 productRouter.post('/create', createProduct)
