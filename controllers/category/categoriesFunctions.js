@@ -2,6 +2,7 @@ const Category = require('../../models/products/Category')
 
 
 const getCategories = async (req, res)=>{
+    
     await Category.find({})
         .then(category => {
             const response = category.map(cate => {
