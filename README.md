@@ -68,7 +68,7 @@ name = Pants e.g and category will be deleted. Products inside won't be deleted.
 
 
 
-###USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/users
+###USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/user/signup
 Body should be like this: {
     username: ""
     name: ""
@@ -80,7 +80,7 @@ Body should be like this: {
 
 
 
-###USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/login'
+###USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/user/signin
 Body should be like this: {
     username: ""
     password: ""

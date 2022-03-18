@@ -4,18 +4,22 @@ const User = require('../models/users/User')
 
 userRouter.post('/', async ( req, res)=> {
     const { body } = req;
-    const { username, name, password } = body;
+    const { username, name, password } = body; 
+    
+    /*the body should came from the form of create user, where the form should 
+    check all fields to be filled*/ 
 
-
-    const passwordHash = await bcrypt.hash(password, 10); // we pass the pasword and the complexity it will have the hash. While the number is higher the higher security but high time to process.
+    const passwordHash = await bcrypt.hash(password, 10); 
+    // we pass the pasword and the complexity it will have the hash. 
+    // While the number is high, the higher security but highs times to process.
 
     const user = new User ({
         username,
         name,
-        passwordHash
+        passwordHash // we create the user with password hashed (we can't save confidential info in db)
     })
 
-    const saveUser = await user.save();
+    const saveUser = await user.save(); // we save user in db
 
     res.status(201).json(saveUser);
 })

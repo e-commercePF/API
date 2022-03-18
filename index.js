@@ -13,8 +13,8 @@ const categoryRouter = require('./controllers/category/routesCategories')
 
 app.use('/api/products', productRouter)
 app.use('/api/categories', categoryRouter)
-app.use('/api/users', userRouter);
-app.use('/api/login', loginRouter);
+app.use('/api/user/signup', userRouter);
+app.use('/api/user/signin', loginRouter);
 
 
 
