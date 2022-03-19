@@ -40,6 +40,9 @@ DELETE || http://localhost:3000/api/products/delete/:id
 ** e.g: 62316b69af6a67376456cfcd .
 
 
+// PUT || http://localhost:3000/api/products/update/:id
+productRouter.put('/update/:id', updateProduct)
+
 
 
 
