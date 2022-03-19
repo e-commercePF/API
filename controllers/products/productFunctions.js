@@ -83,10 +83,30 @@ const deleteProduct = async (req, res)=>{
     res.sendStatus(201)
 }
 
+
+const updateProduct = async (req, res) => { // in future we have to add a middleware to check access token before testing it
+    const { id } = req.params;
+    const actualization = req.body;
+    console.log(actualization)
+
+    Product.findByIdAndUpdate(
+        id, 
+        actualization,
+        {new: true}, // because by default it returns false (prev model, but we want the new model)
+        function async(err, product){
+            if(err) return err;
+            else {
+                console.log(product)
+                return res.status(200).send(product)
+    }})
+
+}
+
 module.exports = {
     getProducts,
     getProductsById,
     createProduct,
     deleteProduct,
-    getProductByName
+    getProductByName,
+    updateProduct
 }
