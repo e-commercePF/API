@@ -1,9 +1,9 @@
 require('dotenv').config();
 require('./db.js') // import mongo db init 
 const app = require('./app.js'); // instance of app with express
-const userRouter = require('./controllers/users')
+const userRouter = require('./controllers/login/users.js')
 const productRouter = require('./controllers/products/routesProducts')
-const loginRouter = require('./controllers/login')
+const loginRouter = require('./controllers/login/login.js')
 const categoryRouter = require('./controllers/category/routesCategories')
 
 // Routes exported here.

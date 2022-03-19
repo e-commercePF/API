@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt');
 const userRouter = require('express').Router();
-const User = require('../models/users/User')
+const User = require('../../models/users/User')
 
 userRouter.post('/', async ( req, res)=> {
-    const { body } = req;
-    const { username, name, password } = body; 
+    
+    const { username, name, password } = req.body; 
     
     /*the body should came from the form of create user, where the form should 
     check all fields to be filled*/ 
