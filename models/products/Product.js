@@ -11,7 +11,8 @@ const productSchema = new Schema(
         quantity: Number,
         isOnStock: Boolean,
         img: String,
-        category: String
+        category: String,
+        rating: Number
     }
 )
 
