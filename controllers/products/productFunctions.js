@@ -137,6 +137,18 @@ const sortNameDesc = async (req, res) => {
     return res.status(200).send(resultName)
  
 }
+const filterByCategory = async (req, res)=>{
+    const name = req.query.name;
+    const filterProducts= await Product.find({"category": {'$regex': name, "$options": "i"}})
+
+    if(!filterProducts || !name){
+        res.status(404).send({message: 'Something went wrong'})
+    } else {
+                  
+    
+        res.status(200).send(filterProducts);
+    }
+}
     
 
 
@@ -152,5 +164,6 @@ module.exports = {
     sortPriceDesc,
     sortPriceAsc,
     sortNameAsc,
-    sortNameDesc
+    sortNameDesc,
+    filterByCategory
 }
