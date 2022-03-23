@@ -1,11 +1,9 @@
 require('dotenv').config();
 require('./db.js') // import mongo db init 
 const app = require('./app.js'); // instance of app with express
-const userRouter = require('./controllers/login/users.js')
 const productRouter = require('./controllers/products/routesProducts')
-const loginRouter = require('./controllers/login/login.js')
 const categoryRouter = require('./controllers/category/routesCategories')
-
+const authRouter = require('./controllers/login/authRoutes')
 // Routes exported here.
 
 
@@ -13,13 +11,12 @@ const categoryRouter = require('./controllers/category/routesCategories')
 
 app.use('/api/products', productRouter)
 app.use('/api/categories', categoryRouter)
-app.use('/api/user/signup', userRouter);
-app.use('/api/user/signin', loginRouter);
+app.use('/api/auth', authRouter)
 
 
 
-app.listen(3000)
-console.log('Server on port ', 3000);
+app.listen(3001)
+console.log('Server on port ', 3001);
 
 
 

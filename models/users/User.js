@@ -2,36 +2,33 @@ const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
     {
-        username: {
-            required: true,
-            type: String,
-            unique: true
-        },
         name: {
+            type: String,
             required: true,
-            type: String
+            max: 64
         },  
-        passwordHash: {
+        email: {
+            type: String,
+            trim: true,
             required: true,
-            type: String
+            unique: true,
+            lowercase: true
+        },
+        passwordHash: {
+            type: String,
+            required: true
         } ,
         role: {
-            type: String // ---> "admin" "guest" "moderator"
+            type: String, // ---> "admin" "guest" "moderator"
+            default: "client"
         }
         
-    }
+    }, // attributes
+    { 
+        timestamps: true, 
+        versionKey: false
+    } // definitions
 )
-
-userSchema.set('toJSON', {
-    transform: (doc, obj) => {
-        obj.id = obj._id
-
-        delete obj._id
-        delete obj.__v
-
-        delete obj.passwordHash
-    }
-})
 
 
 const User = model('User', userSchema);
