@@ -102,11 +102,55 @@ const updateProduct = async (req, res) => { // in future we have to add a middle
 
 }
 
+const sortPriceDesc = async (req, res) => {
+
+   const resultPrice = await Product.find({}).sort({price: -1,})
+
+   
+   return res.status(200).send(resultPrice)
+
+}
+
+const sortPriceAsc = async (req, res) => {
+
+    const resultPrice = await Product.find({}).sort({price: 1,})
+ 
+    
+    return res.status(200).send(resultPrice)
+ 
+}
+
+const sortNameAsc = async (req, res) => {
+
+    const resultName = await Product.find({}).sort({name: 1,})
+ 
+    
+    return res.status(200).send(resultName)
+ 
+}
+
+const sortNameDesc = async (req, res) => {
+
+    const resultName = await Product.find({}).sort({name: -1,})
+ 
+    
+    return res.status(200).send(resultName)
+ 
+}
+    
+
+
+
+
 module.exports = {
     getProducts,
     getProductsById,
     createProduct,
     deleteProduct,
     getProductByName,
-    updateProduct
+    updateProduct,
+    sortPriceDesc,
+    sortPriceAsc,
+    sortNameAsc,
+    sortNameDesc
 }
