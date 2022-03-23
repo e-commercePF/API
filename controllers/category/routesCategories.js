@@ -1,5 +1,5 @@
 const categoryRouter = require('express').Router();
-const { getCategories, getCategoriesByName, createCategory, deleteCategory } = require('./categoriesFunctions')
+const { getCategories, getCategoriesByName, createCategory, deleteCategory, updateCategory } = require('./categoriesFunctions')
 
 categoryRouter.get('/', getCategories)
 
@@ -9,7 +9,7 @@ categoryRouter.post('/create', createCategory)
 
 categoryRouter.delete('/delete/:name', deleteCategory)
 
-    
+categoryRouter.put('/update', updateCategory)
 
 module.exports = categoryRouter;
 

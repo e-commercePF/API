@@ -139,7 +139,7 @@ const sortNameDesc = async (req, res) => {
 }
 const filterByCategory = async (req, res)=>{
     const name = req.query.name;
-    const filterProducts= await Product.find({"category": {'$regex': name, "$options": "i"}})
+    const filterProducts= await Product.find({"category": name})
 
     if(!filterProducts || !name){
         res.status(404).send({message: 'Something went wrong'})

@@ -8,11 +8,7 @@ const categorySchema = new Schema(
         name: {
             type: String,
             unique: true
-        },
-        products: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Product'
-        }]
+        }
     }
 )
 // remove __v & _id. Creating an id prop without _id

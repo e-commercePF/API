@@ -1,12 +1,12 @@
-const Category = require('../../models/products/Category')
-
+const Category = require('../../models/products/Category');
+const Product = require('../../models/products/Product');
 
 const getCategories = async (req, res)=>{
     
     await Category.find({})
         .then(category => {
             const response = category.map(cate => {
-                return cate.name;
+                return cate.name;                    
             })
             res.send(response);
         })
@@ -55,14 +55,39 @@ const createCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
     const { name } = req.params;
 
+    await Product.updateMany({}, {
+        $pull: {
+            category: {$in : [name]} 
+        }
+    })
     await Category.deleteOne({name})
         .then(category => res.send(category))
         .catch(err => console.log(`Error deleting Product: `, err))
+    
+   
+}
+
+const updateCategory= async (req,res)=>{
+    const {nameCategory}= req.query
+    const updatedName= req.body.name
+
+    await Product.updateMany({category:nameCategory}, {
+        $set: {
+            "category.$": updatedName
+        }
+    })
+    
+
+   const category= await Category.findOne({name:nameCategory})
+   await Category.updateOne({name:nameCategory}, {name:updatedName}, {new:true})
+   await category.save()
+   res.send(category)
 }
 
 module.exports = {
     getCategories,
     getCategoriesByName,
     createCategory,
-    deleteCategory
+    deleteCategory, 
+    updateCategory
 }
