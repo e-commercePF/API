@@ -4,7 +4,7 @@ step 3 npm run dev
 
 
 
-###PRODUCT - ROUTES
+    PRODUCT - ROUTES
 
 GET || http://localhost:3000/api/products
 Returns all products.
@@ -50,7 +50,7 @@ productRouter.put('/update/:id', updateProduct)
 
 
 
-###CATEGORIES - ROUTES
+    CATEGORIES - ROUTES
 
 GET || http://localhost:3000/api/categories
 We get all categories ---> In future array with products will appear with their info :D
@@ -73,7 +73,7 @@ name = Pants e.g and category will be deleted. Products inside won't be deleted.
 
 
 
-###USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/user/signup
+    USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/user/signup
 Body should be like this: {
     username: ""
     name: ""
@@ -85,11 +85,20 @@ Body should be like this: {
 
 
 
-###USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/user/signin
+    USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/user/signin
 Body should be like this: {
     username: ""
     password: ""
     }
+
+    USER - GET ALL: 
+     GET || http://localhost:3000/api/users
+
+    USER - FIND BY ID:
+     GET || http://localhost:3000/api/users/:id
+
+    USER - DELETE 
+     DELETE || http://localhost:3000/api/users/delete/:id
 
 
 FILTROS 

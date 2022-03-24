@@ -3,6 +3,7 @@ require('./db.js') // import mongo db init
 const app = require('./app.js'); // instance of app with express
 const productRouter = require('./controllers/products/routesProducts')
 const categoryRouter = require('./controllers/category/routesCategories')
+const userRouter = require('./controllers/users/routesUsers')
 const authRouter = require('./controllers/login/authRoutes')
 // Routes exported here.
 
@@ -12,6 +13,7 @@ const authRouter = require('./controllers/login/authRoutes')
 app.use('/api/products', productRouter)
 app.use('/api/categories', categoryRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/users', userRouter)
 
 
 
