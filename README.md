@@ -19,6 +19,9 @@ GET || http://localhost:3000/api/products/name/:name
 ** e.g: ... .
 And should return the product by name
 
+// GET || http://localhost:3000/api/products/brands
+Return all brands 
+
 
 POST || http://localhost:3000/api/products/create
 Body should contain {
