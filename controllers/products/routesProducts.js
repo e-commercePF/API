@@ -1,7 +1,7 @@
 const productRouter = require('express').Router();
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category')
-const { getProducts,getProductByName, filterRange, getProductsById, updateProduct, filterByBrand, createProduct, deleteProduct, sortPriceDesc, sortPriceAsc, sortNameAsc, sortNameDesc, filterByCategory} = require('../../controllers/products/productFunctions')
+const { getProducts,getProductByName, filterRange, getProductsById, updateProduct, filterByBrand, createProduct, deleteProduct, sortPriceDesc, sortPriceAsc, sortNameAsc, sortNameDesc, filterByCategory, getBrands} = require('../../controllers/products/productFunctions')
 
 // GET || http://localhost:3000/api/products
 productRouter.get('/',getProducts)
@@ -41,6 +41,9 @@ productRouter.get('/brand', filterByBrand)
 
 // GET || http://localhost:3000/api/products/range
 productRouter.get('/range', filterRange)
+
+// GET || http://localhost:3000/api/products/brands
+productRouter.get('/brands', getBrands)
 
 
 

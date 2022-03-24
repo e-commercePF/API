@@ -180,6 +180,22 @@ const filterRange = async (req, res)=> {
 }
 
 
+const getBrands = async (req, res)=>{
+    
+    await Product.find({})
+        .then(brand => {
+            const response = brand.map(b => {
+                return b.brand;                    
+            })
+            res.send(response);
+        })
+        .catch(err => {
+            res.send(err);
+        })
+
+}
+
+
 
 
 module.exports = {
@@ -195,5 +211,6 @@ module.exports = {
     sortNameDesc,
     filterByCategory,
     filterByBrand,
-    filterRange
+    filterRange,
+    getBrands
 }
