@@ -101,7 +101,7 @@ exports.signin = async (req, res) => {
 exports.googlelogin = (req, res) => {
     const { tokenId } = req.body;
     console.log(tokenId);
-    client.verifyIdToken({ idToken: tokenId, audience: '915932541790-aq2qtflb43o1c8r1p69ckcsfdqmthjkl.apps.googleusercontent.com'}).then(response=> {
+    client.verifyIdToken({ idToken: tokenId, audience: '915932541790-lpaqrr1iij1onmgvn6k9jkkng1igjvdd.apps.googleusercontent.com'}).then(response=> {
         console.log(response.payload)    
         const { email_verified, name, email } = response.payload;
             if(email_verified){
