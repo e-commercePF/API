@@ -88,4 +88,33 @@ Body should be like this: {
     password: ""
     }
 
-Estoy probando los permisos 
+
+FILTROS 
+
+    POR PRECIO EN ORDEN DESCENDENTE
+// GET || http://localhost:3000/api/products/desc
+productRouter.get('/desc', sortPriceDesc)
+
+    POR PRECIO EN ORDEN ASCENDENTE
+// GET || http://localhost:3000/api/products/asc
+productRouter.get('/asc', sortPriceAsc)
+
+
+    POR NOMBRE ASCENDENTE
+// GET || http://localhost:3000/api/products/nameA
+productRouter.get('/nameA', sortNameAsc)
+
+    POR NOMBRE DESCENDENTE
+// GET || http://localhost:3000/api/products/nameZ
+productRouter.get('/nameZ', sortNameDesc)
+
+
+    POR CATEGORIA
+// GET || http://localhost:3000/api/products/category
+productRouter.get('/category', filterByCategory)
+
+
+    POR RANGO DE PRECIO ENTRE DOS VALORES
+// GET || http://localhost:3000/api/products/range
+productRouter.get('/range', filterRange)
+

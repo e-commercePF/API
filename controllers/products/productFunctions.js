@@ -149,7 +149,35 @@ const filterByCategory = async (req, res)=>{
         res.status(200).send(filterProducts);
     }
 }
+
+const filterByBrand = async (req, res)=>{
+    const name = req.query.name;
+    const filterProducts= await Product.find({"brand": name})
+
+    if(!filterProducts || !name){
+        res.status(404).send({message: 'Something went wrong'})
+    } else {
+                  
     
+        res.status(200).send(filterProducts);
+    }
+}
+    
+const filterRange = async (req, res)=> {
+    const {minprice, maxprice } = req.query
+    const allProducts = await Product.find({})
+    
+    
+    if(!minprice || !maxprice){
+        res.status(404).send({message: 'Something went wrong'})
+    } else {
+        const results = allProducts.filter(e => (e.price >= minprice && e.price <= maxprice))
+        // const resultPrice = results.sort({price: 1,})
+ 
+        
+        return res.status(200).send(results)
+    }     
+}
 
 
 
@@ -165,5 +193,7 @@ module.exports = {
     sortPriceAsc,
     sortNameAsc,
     sortNameDesc,
-    filterByCategory
+    filterByCategory,
+    filterByBrand,
+    filterRange
 }
