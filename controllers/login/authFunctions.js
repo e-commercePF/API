@@ -54,6 +54,7 @@ exports.signup = async ( req, res) => {
         let passwordHash = await bcrypt.hash(password, 10)
         let newUser = new User({name, email, passwordHash, role});
         newUser.save((err, success)=>{
+            console.log(success)
             if(err){
                 console.log("Error in signp: ", err);
                 return res.status(401).json({error: err})
@@ -77,23 +78,18 @@ exports.signin = async (req, res) => {
         : await bcrypt.compare(password, user.passwordHash);
 
     if(!(user && passwordCheck)) { // if user and passwordCheck were true it wouldn't go into if.
-        res.status(401).json({
+        return res.status(200).json({
             error: 'Invalid user or password'
         })
     }
 
     const userToken = jwt.sign({
-        id: user._id
+        _id: user._id,
+        role: user.role
     }, SECRET_KEY) // and third parameter could be { expiresIn: '1h' }
 
-    res.send({
-        tokenId: userToken,
-        user: {
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role
-        }
+    return res.send({
+        tokenId: userToken
     })  //this parses into jwt 
 }
 
@@ -101,7 +97,7 @@ exports.signin = async (req, res) => {
 exports.googlelogin = (req, res) => {
     const { tokenId } = req.body;
     console.log(tokenId);
-    client.verifyIdToken({ idToken: tokenId, audience: '915932541790-lpaqrr1iij1onmgvn6k9jkkng1igjvdd.apps.googleusercontent.com'}).then(response=> {
+    client.verifyIdToken({ idToken: tokenId, audience: AUTH_GOOGLE_CLIENT}).then(response=> {
         console.log(response.payload)    
         const { email_verified, name, email } = response.payload;
             if(email_verified){
@@ -113,16 +109,14 @@ exports.googlelogin = (req, res) => {
                         })
                     } else {
                         if(user){
-                            const token = jwt.sign({_id: user._id}, SECRET_KEY, {expiresIn: "7d"})
+                            const token = jwt.sign({
+                                _id: user._id,
+                                role: user.role
+                            }, SECRET_KEY, {expiresIn: "7d"})
                             const {_id, name, email} = user;
                             console.log('Login as Google User without creating again ! ')
                             res.json({
-                                token,
-                                user: {
-                                    _id,
-                                    name,
-                                    email
-                                }
+                                tokenId: token
                             })
                         } else {
                             let password = email + SECRET_KEY;
@@ -134,12 +128,14 @@ exports.googlelogin = (req, res) => {
                                         error: "Something went wrong"
                                     })
                                  }
-                                const googleToken = jwt.sign({_id: data._id}, SECRET_KEY, {expiresIn: "7d"})
+                                const googleToken = jwt.sign({
+                                    _id: user._id,
+                                    role: user.role
+                                }, SECRET_KEY, {expiresIn: "7d"})
                                 const {_id, name, email, role} = newUser;
                                  console.log('Created Google User ')
                                 res.send({
-                                    tokenId: googleToken,
-                                    user: {_id, name, email,role}
+                                    tokenId: googleToken
                                 })
 
                             })
