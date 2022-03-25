@@ -48,6 +48,15 @@ productRouter.put('/update/:id', updateProduct)
 
 
 
+PAGINADO
+// GET || http://localhost:3000/api/products/forPage
+productRouter.get('/forPage', getProductsforpage)
+para hacer pruebas se muestra 3 productos por pagina 
+recibe por query el numero de la pagina actual (...?page=2)
+
+
+
+
 
 
     CATEGORIES - ROUTES

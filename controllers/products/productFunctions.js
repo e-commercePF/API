@@ -9,6 +9,22 @@ const getProducts = (req, res) => {
             })
     .catch(err => res.status(err))
 }
+const getProductsforpage = async(req, res) => {
+    const {page}= req.query;
+    const productsForPage= 3;
+    const products= await Product.find({})
+    if(products){
+        const start= (page*productsForPage)-productsForPage
+        const final= page*productsForPage
+        const totalProducts= products.slice(start, final)
+        res.json({
+            totalProducts,
+            totalResult:products.length,
+            productsForPage
+        })
+    }
+}
+
 
 const getProductsById = (req, res) => {
     const { id } = req.params;
@@ -212,5 +228,6 @@ module.exports = {
     filterByCategory,
     filterByBrand,
     filterRange,
-    getBrands
+    getBrands, 
+    getProductsforpage
 }

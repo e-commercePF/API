@@ -1,10 +1,14 @@
 const productRouter = require('express').Router();
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category')
-const { getProducts,getProductByName, filterRange, getProductsById, updateProduct, filterByBrand, createProduct, deleteProduct, sortPriceDesc, sortPriceAsc, sortNameAsc, sortNameDesc, filterByCategory, getBrands} = require('../../controllers/products/productFunctions')
+const { getProducts,getProductByName, filterRange, getProductsById, updateProduct, filterByBrand, createProduct, deleteProduct, sortPriceDesc, 
+    sortPriceAsc, sortNameAsc, sortNameDesc, filterByCategory, getBrands, getProductsforpage} = require('../../controllers/products/productFunctions')
 
 // GET || http://localhost:3000/api/products
 productRouter.get('/',getProducts)
+
+// GET || http://localhost:3000/api/products/forPage
+productRouter.get('/forPage', getProductsforpage)
 
 // GET || http://localhost:3000/api/products/:name
 productRouter.get('/name/:name', getProductByName)
