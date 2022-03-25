@@ -100,6 +100,10 @@ Body should be like this: {
     USER - DELETE 
      DELETE || http://localhost:3000/api/users/delete/:id
 
+    USER - UPDATE
+     PUT || http://localhost:3000/api/users/update/:id   
+     (enviar por body el nuevo rol que le quiero dar al usuario  ej:{"role": "admin"})
+
 
 FILTROS 
 
