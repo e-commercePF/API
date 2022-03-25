@@ -87,7 +87,7 @@ const deleteProduct = async (req, res)=>{
 const updateProduct = async (req, res) => { // in future we have to add a middleware to check access token before testing it
     const { id } = req.params;
     const actualization = req.body;
-    console.log(actualization)
+  
 
     Product.findByIdAndUpdate(
         id, 
@@ -96,7 +96,7 @@ const updateProduct = async (req, res) => { // in future we have to add a middle
         function async(err, product){
             if(err) return err;
             else {
-                console.log(product)
+                
                 return res.status(200).send(product)
     }})
 
