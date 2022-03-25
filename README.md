@@ -82,7 +82,7 @@ name = Pants e.g and category will be deleted. Products inside won't be deleted.
 
 
 
-    USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/user/signup
+    USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/auth/signup
 Body should be like this: {
     username: ""
     name: ""
@@ -90,11 +90,11 @@ Body should be like this: {
     }
 
 
+http://localhost:3000/api/auth/googlelogin
 
 
 
-
-    USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/user/signin
+    USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/auth/signin
 Body should be like this: {
     username: ""
     password: ""
