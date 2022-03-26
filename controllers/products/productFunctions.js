@@ -13,13 +13,15 @@ const getProductsforpage = async(req, res) => {
     const {page}= req.query;
     const productsForPage= 3;
     const products= await Product.find({})
-    if(products){
+
+    const resultProducts= products.filter(product=> product.quantity>=1)
+    if(resultProducts){
         const start= (page*productsForPage)-productsForPage
         const final= page*productsForPage
-        const totalProducts= products.slice(start, final)
+        const totalProducts= resultProducts.slice(start, final)
         res.json({
             totalProducts,
-            totalResult:products.length,
+            totalResult:resultProducts.length,
             productsForPage
         })
     }
