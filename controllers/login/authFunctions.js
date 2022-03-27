@@ -85,7 +85,8 @@ exports.signin = async (req, res) => {
 
     const userToken = jwt.sign({
         _id: user._id,
-        role: user.role
+        role: user.role,
+        email: user.email
     }, SECRET_KEY) // and third parameter could be { expiresIn: '1h' }
 
     return res.send({
@@ -111,9 +112,9 @@ exports.googlelogin = (req, res) => {
                         if(user){
                             const token = jwt.sign({
                                 _id: user._id,
-                                role: user.role
+                                role: user.role,
+                                email: user.email
                             }, SECRET_KEY, {expiresIn: "7d"})
-                            const {_id, name, email} = user;
                             console.log('Login as Google User without creating again ! ')
                             res.json({
                                 tokenId: token
@@ -130,9 +131,9 @@ exports.googlelogin = (req, res) => {
                                  }
                                 const googleToken = jwt.sign({
                                     _id: user._id,
-                                    role: user.role
+                                    role: user.role,
+                                    email: user.email
                                 }, SECRET_KEY, {expiresIn: "7d"})
-                                const {_id, name, email, role} = newUser;
                                  console.log('Created Google User ')
                                 res.send({
                                     tokenId: googleToken
