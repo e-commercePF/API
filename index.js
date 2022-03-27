@@ -5,6 +5,7 @@ const productRouter = require('./controllers/products/routesProducts')
 const categoryRouter = require('./controllers/category/routesCategories')
 const userRouter = require('./controllers/users/routesUsers')
 const authRouter = require('./controllers/login/authRoutes')
+const PORT = process.env.PORT || 3000;
 // Routes exported here.
 
 
@@ -16,9 +17,8 @@ app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 
 
-
-app.listen(3000)
-console.log('Server on port ', 3000);
+app.listen(PORT)
+console.log('Server on port ', PORT);
 
 
 
