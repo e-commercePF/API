@@ -122,6 +122,5 @@ FILTROS
 
 
 
-    POR RANGO DE PRECIO ENTRE DOS VALORES
-// GET || http://localhost:3000/api/products/range
+
 
