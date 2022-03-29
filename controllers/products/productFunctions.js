@@ -164,15 +164,30 @@ const getPaginatedFilters = async(req, res) => {
         response = await brands(response2, brand)
         response2 = response
     }
-    if (pricemin || pricemax) {
+    // if (pricemin && pricemax) {
         
-        responseFilter = response.filter(e => (e.price >= pricemin || e.price <= pricemax))
+    //     responseFilter = response.filter(e => (e.price >= pricemin && e.price <= pricemax))
+    //     response = responseFilter.sort((a,b) => a.price - b.price)
+    //     response2 = response
+    // } 
+    if (pricemin && !pricemax) {
+        
+        responseFilter = response.filter(e => (e.price >= pricemin))
+        response = responseFilter.sort((a,b) => a.price - b.price)
+        response2 = response
+    } else if (pricemax && !pricemin) {
+        
+        responseFilter = response.filter(e => (e.price <= pricemax))
+        response = responseFilter.sort((a,b) => a.price - b.price)
+        response2 = response
+    } else if (pricemin && pricemax) {
+        
+        responseFilter = response.filter(e => (e.price >= pricemin && e.price <= pricemax))
         response = responseFilter.sort((a,b) => a.price - b.price)
         response2 = response
     }
     if (name) {
         response = await order(response2, name)
-        
     }
 
     
