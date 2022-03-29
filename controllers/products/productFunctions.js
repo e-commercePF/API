@@ -104,7 +104,7 @@ const updateProduct = async (req, res) => { // in future we have to add a middle
 
 const categories = async (response2, category) => {
    const res = response2.filter(p => p.category.includes(category))
-   console.log(response2, category)
+   
    return res
 }
 
@@ -154,7 +154,7 @@ const getPaginatedFilters = async(req, res) => {
     let response = products
     let response2 = products
 
-    const {category, brand, name} = req.query
+    const {category, brand, name, pricemin, pricemax} = req.query
    
     if (category) {
         response = await categories(response2, category)
@@ -164,12 +164,18 @@ const getPaginatedFilters = async(req, res) => {
         response = await brands(response2, brand)
         response2 = response
     }
+    if (pricemin || pricemax) {
+        
+        responseFilter = response.filter(e => (e.price >= pricemin || e.price <= pricemax))
+        response = responseFilter.sort((a,b) => a.price - b.price)
+        response2 = response
+    }
     if (name) {
         response = await order(response2, name)
         
     }
 
-    console.log(response)
+    
     const resultProducts= response.filter(product=> product.quantity>=1)
     if(resultProducts){
         const start= (page*productsForPage)-productsForPage
@@ -185,21 +191,21 @@ const getPaginatedFilters = async(req, res) => {
 
 
     
-const filterRange = async (req, res)=> {
-    const {minprice, maxprice } = req.query
-    const allProducts = await Product.find({})
+// const filterRange = async (req, res)=> {
+//     const {minprice, maxprice } = req.query
+//     const allProducts = await Product.find({})
     
     
-    if(!minprice || !maxprice){
-        res.status(404).send({message: 'Something went wrong'})
-    } else {
-        const results = allProducts.filter(e => (e.price >= minprice && e.price <= maxprice))
-        const resultPrice = results.sort((a,b) => a.price - b.price)
+//     if(!minprice || !maxprice){
+//         res.status(404).send({message: 'Something went wrong'})
+//     } else {
+//         const results = allProducts.filter(e => (e.price >= minprice && e.price <= maxprice))
+//         const resultPrice = results.sort((a,b) => a.price - b.price)
  
         
-        return res.status(200).send(resultPrice)
-    }     
-}
+//         return res.status(200).send(resultPrice)
+//     }     
+// }
 
 
 const getBrands = async (req, res)=>{
@@ -227,7 +233,7 @@ module.exports = {
     deleteProduct,
     getProductByName,
     updateProduct,
-    filterRange,
+    // filterRange,
     getBrands, 
     getPaginatedFilters,
 }

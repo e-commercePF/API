@@ -1,7 +1,7 @@
 const productRouter = require('express').Router();
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category')
-const { createProduct, getProducts, getProductByName, getBrands, getProductsById, updateProduct, deleteProduct, getPaginatedFilters, filterRange} = require('../../controllers/products/productFunctions')
+const { createProduct, getProducts, getProductByName, getBrands, getProductsById, updateProduct, deleteProduct, getPaginatedFilters} = require('../../controllers/products/productFunctions')
 
 
 // POST || http://localhost:3000/api/products/create
@@ -25,7 +25,7 @@ productRouter.put('/update/:id', updateProduct)
 productRouter.delete('/delete/:id', deleteProduct)
 
 // GET || http://localhost:3000/api/products/range
-productRouter.get('/range', filterRange)
+// productRouter.get('/range', filterRange)
 
 // GET || http://localhost:3000/api/products/forPage
 productRouter.get('/forPage', getPaginatedFilters)
