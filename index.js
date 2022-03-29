@@ -17,8 +17,8 @@ app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 
 
-app.listen(PORT)
-console.log('Server on port ', PORT);
+app.listen(3000)
+console.log('Server on port ', 3000);
 
 
 
