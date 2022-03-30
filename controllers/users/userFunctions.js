@@ -76,22 +76,20 @@ const updateUser= async (req,res)=>{
     }
 }
 
-const sendMail = async (req, res) => {
-    
-     
-    var options = {
-        from: '"prueba email" <sportsmarketnl@gmail.com>', // sender address
-        to: "ocampojuanmartin40@gmail.com, a47prhywyxkwh6v3@ethereal.email", // list of receivers
-        subject: "prueba nodemailer", // Subject line
-        text: "prueba", // plain text body
+const adminVerify = (req, res) => {
+    if(req.user.role === 'admin'){
+        res.send(true)
+    } else {
+        res.status(401).send({message: " You don't have permission to do that"})
     }
-    transporter.sendMail(options, function (error,info){
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Message Sent: ' + info.response);
-        }
-    });
+}
+
+const clientVerify = (req, res) => {
+    if(req.user.role === 'client'){
+        res.send(true)
+    } else {
+        res.status(401).send({message: " You don't have permission to do that"})
+    }
 }
 
 module.exports = {
@@ -99,6 +97,9 @@ module.exports = {
     getUsersById,
     deleteUser,
     updateUser,
-    sendMail
-
+    adminVerify,
+    clientVerify
 }
+
+
+
