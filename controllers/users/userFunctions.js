@@ -75,10 +75,30 @@ const updateUser= async (req,res)=>{
     }
 }
 
+const adminVerify = (req, res) => {
+    if(req.user.role === 'admin'){
+        res.send(true)
+    } else {
+        res.status(401).send({message: " You don't have permission to do that"})
+    }
+}
+
+const clientVerify = (req, res) => {
+    if(req.user.role === 'client'){
+        res.send(true)
+    } else {
+        res.status(401).send({message: " You don't have permission to do that"})
+    }
+}
+
 module.exports = {
     getUsers,
     getUsersById,
     deleteUser,
-    updateUser
-
+    updateUser,
+    adminVerify,
+    clientVerify
 }
+
+
+
