@@ -10,7 +10,10 @@ const orderSchema = new Schema(
         products: [
             {
                 productId: { type: String},
-                quantity: { type: Number, default: 1}
+                quantity: { type: Number, default: 1},
+                price: { type: Number, default: 0},
+                img: String,
+                name: String,
             }
         ],
         amount: { type: Number, required: true },
