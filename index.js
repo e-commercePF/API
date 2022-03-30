@@ -19,8 +19,8 @@ app.use('/api/users', userRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/orders', orderRouter)
 
-app.listen(PORT)
-console.log('Server on port ', PORT);
+app.listen(3000)
+console.log('Server on port ', 3000);
 
 
 

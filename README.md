@@ -48,6 +48,15 @@ productRouter.put('/update/:id', updateProduct)
 
 
 
+PAGINADO
+// GET || http://localhost:3000/api/products/forPage
+productRouter.get('/forPage', getProductsforpage)
+para hacer pruebas se muestra 3 productos por pagina 
+recibe por query el numero de la pagina actual (...?page=2)
+
+
+
+
 
 
     CATEGORIES - ROUTES
@@ -73,7 +82,7 @@ name = Pants e.g and category will be deleted. Products inside won't be deleted.
 
 
 
-    USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/user/signup
+    USER - CREATE || METHOD: POST || URL: http://localhost:3000/api/auth/signup
 Body should be like this: {
     username: ""
     name: ""
@@ -81,11 +90,11 @@ Body should be like this: {
     }
 
 
+http://localhost:3000/api/auth/googlelogin
 
 
 
-
-    USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/user/signin
+    USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/auth/signin
 Body should be like this: {
     username: ""
     password: ""
@@ -107,30 +116,11 @@ Body should be like this: {
 
 FILTROS 
 
-    POR PRECIO EN ORDEN DESCENDENTE
-// GET || http://localhost:3000/api/products/desc
-productRouter.get('/desc', sortPriceDesc)
-
-    POR PRECIO EN ORDEN ASCENDENTE
-// GET || http://localhost:3000/api/products/asc
-productRouter.get('/asc', sortPriceAsc)
+    FILTROS UNIDOS CON EL PAGINADO
+// GET || http://localhost:3000/api/products/forPage
+(especificar si o si por query la pagina que se quiere mostrar y si se quiere aplicar un filtro agregarlo tambien por query, se pueden aplicar todos juntos)
 
 
-    POR NOMBRE ASCENDENTE
-// GET || http://localhost:3000/api/products/nameA
-productRouter.get('/nameA', sortNameAsc)
-
-    POR NOMBRE DESCENDENTE
-// GET || http://localhost:3000/api/products/nameZ
-productRouter.get('/nameZ', sortNameDesc)
 
 
-    POR CATEGORIA
-// GET || http://localhost:3000/api/products/category
-productRouter.get('/category', filterByCategory)
-
-
-    POR RANGO DE PRECIO ENTRE DOS VALORES
-// GET || http://localhost:3000/api/products/range
-productRouter.get('/range', filterRange)
 
