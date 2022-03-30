@@ -1,5 +1,6 @@
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category');
+const Review = require('../../models/users/Review');
 
 
 const getProducts = (req, res) => {
@@ -9,16 +10,24 @@ const getProducts = (req, res) => {
     .catch(err => res.status(err))
 }
 
-const getProductsById = (req, res) => {
+const getProductsById = async(req, res) => {
     const { id } = req.params;
-        Product.findById(id)
-        .then(products =>{
-            if(products) {
-                return res.json(products)
+      const product= await Product.findById(id)
+      const reviewProduct= await Review.find({id_product: id})
+      const reviews= reviewProduct.map(review=> {
+          return{
+              rating: review.rating,
+              description: review.description,
+          }
+      })
+      product.reviews= reviews
+                    
+        if(product) {
+                return res.json(product)
             } else {
                 res.status(404).end()
             }
-        })// busca nota por id mas facil xd
+        // busca nota por id mas facil xd
 }
 
 const getProductByName = async (req, res) => {

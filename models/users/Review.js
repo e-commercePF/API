@@ -4,6 +4,8 @@ const { Schema, model } = require('mongoose');
 
 const reviewSchema = new Schema(
     {
+        id_product: String,
+        user: String,
         description: String,
         rating: Number
     }
