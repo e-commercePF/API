@@ -20,7 +20,7 @@ exports.authenticateJWT = (req, res, next) => {
 
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-
+        console.log(token);
         jwt.verify(token, SECRET_KEY, (err, user) => {
             if (err) {
                 return res.status(403).send({message: 'Error verifying token', pos: 'Middleware'});
