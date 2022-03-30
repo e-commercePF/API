@@ -6,8 +6,6 @@ const categoryRouter = require('./controllers/category/routesCategories')
 const userRouter = require('./controllers/users/routesUsers')
 const authRouter = require('./controllers/login/authRoutes');
 const reviewRouter= require('./controllers/review/routesReview')
-const PORT = process.env.PORT || 3000;
-const authRouter = require('./controllers/login/authRoutes')
 // Routes exported here.
 const paymentRouter = require('./controllers/payment/stripe')
 const orderRouter = require('./controllers/payment/orders')
