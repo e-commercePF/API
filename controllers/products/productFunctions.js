@@ -1,53 +1,52 @@
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category');
+const Review = require('../../models/users/Review');
 
 
 const getProducts = (req, res) => {
-    Product.find({}).then((products) =>{
-        
+    Product.find({}).then((products) =>{        
         res.json(products)
             })
     .catch(err => res.status(err))
 }
 
-const getProductsById = (req, res) => {
+const getProductsById = async(req, res) => {
     const { id } = req.params;
-        Product.findById(id)
-        .then(products =>{
-            if(products) {
-                return res.json(products)
+      const product= await Product.findById(id)
+      const reviewProduct= await Review.find({id_product: id})
+      const reviews= reviewProduct.map(review=> {
+          return{
+              rating: review.rating,
+              description: review.description,
+          }
+      })
+      product.reviews= reviews
+                    
+        if(product) {
+                return res.json(product)
             } else {
                 res.status(404).end()
             }
-        })// busca nota por id mas facil xd
+        // busca nota por id mas facil xd
 }
 
 const getProductByName = async (req, res) => {
     const { name } = req.params;
     const match = await Product.find({"name": {'$regex': name, "$options": "i"}});
-
     if(!match || !name){
         res.status(404).send({message: 'Something went wrong'})
-    } else {
-                  
-    
+    } else {           
         res.status(200).send(match);
     }
 }
 
 const createProduct = async (req, res) => {
-
-    const product = req.body;
-    
+    const product = req.body;    
         if(!product){
             return res.status(400).json({message: `We could't process your require`})
-        }
-    
-    const newProduct = await new Product(product); // We create a new instance of Product 
-    
-        
-        newProduct.save().then(async (saveProduct)=> {
-    
+        }    
+    const newProduct = await new Product(product); // We create a new instance of Product    
+        newProduct.save().then(async (saveProduct)=> {    
         Category.updateOne(
                     { name: saveProduct.category}, 
                     { 
@@ -65,30 +64,24 @@ const createProduct = async (req, res) => {
         
 }
 
-const deleteProduct = async (req, res)=>{
+const deleteProduct = async (req, res)=>{ // solo lo hace el admin 
     const { id } = req.params;
 
     const saveProd = await Product.findById(id);
     const cate = saveProd.category
     await Product.deleteOne({_id: id}).then(prod => console.log(`Product deleted`)).catch(err => console.log(`Error deleting Product: `, err))
-
-
-    await Category.updateOne({name: cate}, {
-        
+    await Category.updateOne({name: cate}, {        
         $pullAll: {
                 products: [id]
             },
         },
     )
-
     res.sendStatus(201)
 }
 
 const updateProduct = async (req, res) => { // in future we have to add a middleware to check access token before testing it
     const { id } = req.params;
     const actualization = req.body;
-  
-
     Product.findByIdAndUpdate(
         id, 
         actualization,
@@ -102,19 +95,18 @@ const updateProduct = async (req, res) => { // in future we have to add a middle
 
 }
 
-const categories = async (response2, category) => {
-   const res = response2.filter(p => p.category.includes(category))
-   
+const filterBycategories = async (response2, category) => {
+   const res = response2.filter(p => p.category.includes(category))  
    return res
 }
 
-const brands = async (response2, brand) => {
+const filterbybrands = async (response2, brand) => {
     const res = response2.filter(p => p.brand.includes(brand))
     return res
 }
 
 
-const order = async (response2, value) => {
+const orderProducts = async (response2, value) => {
     switch (value) {
         case 'pasc':
             return response2 = await response2.sort((a,b)=> a.price -b.price)
@@ -141,14 +133,15 @@ const order = async (response2, value) => {
                 return 0;
             })
         default: 
-        return await Product.find({})
+        return await response2
     }
 }
 
 
+
 const getPaginatedFilters = async(req, res) => {
     const {page}= req.query;
-    const productsForPage= 3;
+    const productsForPage= 6;
     
     const products = await Product.find({})
     let response = products
@@ -157,11 +150,11 @@ const getPaginatedFilters = async(req, res) => {
     const {category, brand, name, pricemin, pricemax} = req.query
    
     if (category) {
-        response = await categories(response2, category)
+        response = await filterBycategories(response2, category)
         response2 = response
     }
     if (brand) {
-        response = await brands(response2, brand)
+        response = await filterbybrands(response2, brand)
         response2 = response
     }
     // if (pricemin && pricemax) {
@@ -185,9 +178,9 @@ const getPaginatedFilters = async(req, res) => {
         responseFilter = response.filter(e => (e.price >= pricemin && e.price <= pricemax))
         response = responseFilter.sort((a,b) => a.price - b.price)
         response2 = response
-    }
+    }    
     if (name) {
-        response = await order(response2, name)
+        response = await orderProducts(response2, name)
     }
 
     
@@ -196,10 +189,12 @@ const getPaginatedFilters = async(req, res) => {
         const start= (page*productsForPage)-productsForPage
         const final= page*productsForPage
         const totalProducts= resultProducts.slice(start, final)
+        const totalPage= Math.ceil(resultProducts.length/productsForPage)
         res.json({
             totalProducts,
             totalResult:resultProducts.length,
-            productsForPage
+            productsForPage,
+            totalPage            
         })
     }
 }
@@ -222,7 +217,7 @@ const getPaginatedFilters = async(req, res) => {
 //     }     
 // }
 
-
+//
 const getBrands = async (req, res)=>{
     
     await Product.find({})
@@ -237,6 +232,7 @@ const getBrands = async (req, res)=>{
         })
 
 }
+
 
 
 

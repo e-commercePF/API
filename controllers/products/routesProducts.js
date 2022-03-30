@@ -15,7 +15,7 @@ productRouter.get('/brands', getBrands)
 // GET || http://localhost:3000/api/products/:name
 productRouter.get('/name/:name', getProductByName)
 
-// GET || http://localhost:3000/api/products/:id
+// GET || http://localhost:3000/api/products/id/:id
 productRouter.get('/id/:id', getProductsById)
 
 // PUT || http://localhost:3000/api/products/update/:id

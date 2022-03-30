@@ -14,6 +14,7 @@ const productSchema = new Schema(
         category: Array,
         rating: Number,
         brand: String,
+        reviews: Array
     }
 )
 
