@@ -92,13 +92,30 @@ const clientVerify = (req, res) => {
     }
 }
 
+const sendMail = async (req, res) => { 
+    var options = {
+        from: '"prueba email" <sportsmarketnl@gmail.com>', // sender address
+        to: "ocampojuanmartin40@gmail.com, a47prhywyxkwh6v3@ethereal.email", // list of receivers
+        subject: "prueba nodemailer", // Subject line
+        text: "prueba", // plain text body
+    }
+    transporter.sendMail(options, function (error,info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Message Sent: ' + info.response);
+        }
+    });
+  }
+
 module.exports = {
     getUsers,
     getUsersById,
     deleteUser,
     updateUser,
     adminVerify,
-    clientVerify
+    clientVerify,
+    sendMail
 }
 
 
