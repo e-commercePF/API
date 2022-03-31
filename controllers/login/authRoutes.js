@@ -4,7 +4,7 @@ const { signup, signin, googlelogin, activateAccount } = require('./authFunction
 
 router.post('/signup', signup);
 router.post('/signin', signin);
-router.post('/email-activate', activateAccount)
+router.post('/email-activate/:token', activateAccount) 
 router.post('/googlelogin', googlelogin)
 
 module.exports = router;
