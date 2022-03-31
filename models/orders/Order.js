@@ -20,6 +20,10 @@ const orderSchema = new Schema(
         address: { type: Object, required: true},
         orderId: { type: String, required: true},
         status: { type: String, default: 'pending'},
+    },
+    { 
+        timestamps: true, 
+        versionKey: false
     }
 )
 

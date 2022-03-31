@@ -9,6 +9,7 @@ const reviewRouter= require('./controllers/review/routesReview')
 // Routes exported here.
 const paymentRouter = require('./controllers/payment/stripe')
 const orderRouter = require('./controllers/payment/orders')
+const { authenticateJWT } = require('./controllers/login/authFunctions')
 
 const PORT = process.env.PORT || 3000;
 
@@ -19,7 +20,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 app.use('/api/review', reviewRouter)
 app.use('/api/payment', paymentRouter)
-app.use('/api/orders', orderRouter)
+app.use('/api/orders', authenticateJWT, orderRouter)
 
 
 app.listen(3000)
