@@ -21,7 +21,6 @@ const getProductsById = async(req, res) => {
           }
       })
       product.reviews= reviews
-                    
         if(product) {
                 return res.json(product)
             } else {

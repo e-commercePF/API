@@ -23,5 +23,59 @@ router.post('/', async (req, res) => {
     
     
 })
+// GET || http://localhost:3000/api/orders/all
+// GET ALL ORDERS... verifyAdmin need header --> { headers: { Authorization: "Bearer " + token} }
+router.get('/all', (req, res) => {
+    if(req.user.role === 'admin') {
+        Order.find({}, (err, orders) => {
+            if(err) {
+                res.status(500).send(err);
+            } else {
+                res.status(200).send(orders);
+            }
+        })
+    } else {
+        return res.status(401).send({message: 'Not authorized'})
+    }
+})
+// GET || http://localhost:3000/api/orders/allUser 
+// GET ALL ORDERS FROM SPECIFC USER  need header --> { headers: { Authorization: "Bearer " + token} }
+router.get('/allUser', (req, res) => {
+    Order.find({userId: req.user._id}, (err, orders) => {
+        if(err) {
+            console.log("error del Order.find", err)
+        }
+        res.status(200).send(orders);
+    })
+})
+// GET || http://localhost:3000/api/orders/:orderId  
+// GET an order matching with the id /api/orders/${orderId}
+router.get('/:orderId', (req, res) => {
+    Order.findOne({ "orderId": req.params.orderId}, (err, order) => {
+        if(err) {
+            console.log("error del Order.find", err)
+        }
+        if(order.userId === req.user._id || req.user.role === 'admin') {
+            res.status(200).send(order)
+        } else {
+            res.status(401).send({ message: "Not authorized"})
+        }
+    })
+})
+
+
+// PUT || http://localhost:3000/api/orders/:orderId  
+// --> in params goes an order.orderId ${order.orderId} 
+// --> in body ej. : { "status": "completed"} 
+
+router.put('/:orderId', (req, res) => {
+    Order.findOneAndUpdate({ "orderId": req.params.orderId}, req.body, { new: true },(err, order) => {
+        if(err) {
+            console.log("error del Order.find", err)
+        }
+        res.status(200).send(order);
+    })
+})
+
 
 module.exports = router
