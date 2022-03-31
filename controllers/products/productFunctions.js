@@ -1,6 +1,7 @@
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category');
 const Review = require('../../models/users/Review');
+const{statusReview, statusOrderProduct, getReviewsProduct}= require('../review/reviewFunctions')
 
 
 const getProducts = (req, res) => {
@@ -12,20 +13,26 @@ const getProducts = (req, res) => {
 
 const getProductsById = async(req, res) => {
     const { id } = req.params;
-      const product= await Product.findById(id)
-      const reviewProduct= await Review.find({id_product: id})
-      const reviews= reviewProduct.map(review=> {
-          return{
-              rating: review.rating,
-              description: review.description,
-          }
-      })
-      product.reviews= reviews
-        if(product) {
-                return res.json(product)
-            } else {
-                res.status(404).end()
-            }
+    const { userId }= req.query // llega solo si hay un usuario 
+    const product= await Product.findById(id)
+
+    const reviews= await getReviewsProduct(id)
+    product.reviews= reviews
+    
+    // si no hay usuario el status review es falso. 
+    // si hay usuario entonces se verifica el estado en otra funcion 
+    if (userId){
+        product.statusReview= await statusReview(reviews,userId, id)
+        
+    }else{
+        product.statusReview=false
+        console.log('es falso porque no hay usuario')
+    }
+    if(product) {
+            return res.json(product)
+        } else {
+            res.status(404).end()
+        }
         // busca nota por id mas facil xd
 }
 
