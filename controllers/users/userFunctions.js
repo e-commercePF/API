@@ -1,5 +1,5 @@
 const User = require("../../models/users/User");
-const { transporter } = require('./mailer')
+// const { transporter } = require('./mailer')
 
 const getUsers = (req, res) => {
     User.find({}, (err, users) => {
@@ -92,21 +92,21 @@ const clientVerify = (req, res) => {
     }
 }
 
-const sendMail = async (req, res) => { 
-    var options = {
-        from: '"prueba email" <sportsmarketnl@gmail.com>', // sender address
-        to: "ocampojuanmartin40@gmail.com, a47prhywyxkwh6v3@ethereal.email", // list of receivers
-        subject: "prueba nodemailer", // Subject line
-        text: "prueba", // plain text body
-    }
-    transporter.sendMail(options, function (error,info){
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Message Sent: ' + info.response);
-        }
-    });
-  }
+// const sendMail = async (req, res) => { 
+//     var options = {
+//         from: '"prueba email" <sportsmarketnl@gmail.com>', // sender address
+//         to: "ocampojuanmartin40@gmail.com, a47prhywyxkwh6v3@ethereal.email", // list of receivers
+//         subject: "prueba nodemailer", // Subject line
+//         text: "prueba", // plain text body
+//     }
+//     transporter.sendMail(options, function (error,info){
+//         if (error) {
+//             console.log(error);
+//         } else {
+//             console.log('Message Sent: ' + info.response);
+//         }
+//     });
+//   }
 
 module.exports = {
     getUsers,
@@ -115,7 +115,7 @@ module.exports = {
     updateUser,
     adminVerify,
     clientVerify,
-    sendMail
+    // sendMail
 }
 
 
