@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const User = require('../../models/users/User')
-const { SECRET_KEY, AUTH_GOOGLE_CLIENT } = process.env;
+const { SECRET_KEY, AUTH_GOOGLE_CLIENT, CLIENT_URL } = process.env;
+const { transporter } = require('../users/mailer')
 
 
 // Google Login requirements
@@ -51,19 +52,76 @@ exports.signup = async ( req, res) => {
         if(user){
             return res.status(400).json({error: "User with this email already exists."})
         }
-        let passwordHash = await bcrypt.hash(password, 10)
-        let newUser = new User({name, email, passwordHash, role});
-        newUser.save((err, success)=>{
-            console.log(success)
-            if(err){
-                console.log("Error in signp: ", err);
-                return res.status(401).json({error: err})
+
+        const token = jwt.sign({name, email, password}, SECRET_KEY);
+
+        const options = {
+                from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
+                to: email , // list of receivers
+                subject: "Account Activation Link", // Subject line
+                html: `<h2>Please click on given link to activate your account :</h2>
+                <p>${CLIENT_URL}/authentication/activate/${token}</p>
+                ` , // plain text body
             }
+            transporter.sendMail(options, function (error,info){
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Message Sent: ' + info.response);
+                }
+            });  
             res.json({
-                message: "Signup success!"
-            })
-        })
+                        message: "Email has been sent, kindly activate your account!" })
+
+        // let passwordHash = await bcrypt.hash(password, 10)
+
+        // let newUser = new User({name, email, passwordHash, role});
+        // newUser.save((err, success)=>{
+        //     console.log(success)
+        //     if(err){
+        //         console.log("Error in signp: ", err);
+        //         return res.status(401).json({error: err})
+        //     }
+        //     res.json({
+        //         message: "Email has been sent, kindly activate your account!"
+        //     })
+        // })
     })
+}
+
+exports.activateAccount = async (req, res) => {
+    const {token} = req.body;
+
+    if (token) {
+        jwt.verify(token, SECRET_KEY, function (err, decodedToken) {
+            if (err) {
+                return res.status(400).json({ error: "Incorrect or expired link"})
+            }
+            const {name, email, password, role} = decodedToken;
+            User.findOne({"email": email}).exec(async (err, user) => {
+                console.log(err,user)
+                if(user){
+                    return res.status(400).json({error: "User with this email already exists."})
+                }
+                
+         let passwordHash = await bcrypt.hash(password, 10)
+
+         let newUser = new User({name, email, passwordHash, role});
+         newUser.save((err, success)=>{
+             console.log(success)
+            if(err){
+                console.log("Error in signup while account activation: ", err);
+                return res.status(401).json({ Error: "error activating error"})
+             }
+             res.json({
+                 message: "Signup successfull!"
+             })
+         })
+        })
+         })
+    } else {
+        return res.json({error: "error"})
+    }
 }
 
 // Log a User with credentials || NOT GOOGLE LOGIN!
@@ -130,9 +188,9 @@ exports.googlelogin = (req, res) => {
                                     })
                                  }
                                 const googleToken = jwt.sign({
-                                    _id: user._id,
-                                    role: user.role,
-                                    email: user.email
+                                    _id: data._id,
+                                    role: data.role,
+                                    email: data.email
                                 }, SECRET_KEY, {expiresIn: "7d"})
                                  console.log('Created Google User ')
                                 res.send({
