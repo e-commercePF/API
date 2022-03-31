@@ -60,7 +60,7 @@ exports.signup = async ( req, res) => {
                 to: email , // list of receivers
                 subject: "Account Activation Link", // Subject line
                 html: `<h2>Please click on given link to activate your account :</h2>
-                <p>http://localhost:3000/api/auth/email-activate/${token}</p>`
+                <p>http://localhost:4000/api/auth/email-activate/${token}</p>`
             }
             transporter.sendMail(options, function (error,info){
                 if (error) {
