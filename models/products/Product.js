@@ -10,11 +10,12 @@ const productSchema = new Schema(
         price: Number,
         quantity: Number,
         isOnStock: Boolean,
-        img: String,
+        img: Array,
         category: Array,
         rating: Number,
         brand: String,
-        reviews: Array
+        reviews: Array, 
+        statusReview: Boolean
     }
 )
 
