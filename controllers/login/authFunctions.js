@@ -139,7 +139,7 @@ exports.forgotPassword = (req, res) => {
                 to: email , // list of receivers
                 subject: "Account Activation Link", // Subject line
                 html: `<h2>Please click on given link to reset your password :</h2>
-                <p>http://localhost:4000/api/auth/resetpassword/${token}</p>`
+                <p>http://localhost:4000/resetpassword/${token}</p>`
         }
 
         return user.updateOne({resetLink: token}, function(err, success) {
@@ -172,7 +172,7 @@ exports.resetPassword = (req, res) => {
                     error: "Incorrect or expired token"
                 })
             }
-            User.findOne({_id:decodedData._id}, async (err, user) => {
+            User.findOne({resetLink}, async (err, user) => {
                 if(err || !user) {
                     return res.status(400).json({error: "User with this token does not exist."})
                 }

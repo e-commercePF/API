@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Order = require('../../models/orders/Order');
+const { transporter } = require('../users/mailer');
+
 //STRIPE 
 router.post('/', async (req, res) => {
         Order.findOne({ "orderId": req.body.orderId}, async (err, order) => {
@@ -10,6 +12,22 @@ router.post('/', async (req, res) => {
                     const newOrder = new Order(req.body);
                     const saveOrder = await newOrder.save();
                     res.status(200).send(saveOrder);
+                    const options = {
+                        from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
+                        to: req.body.email , // list of receivers
+                        subject: "Purchase", // Subject line
+                        html: `<h2>Thanks for buying at Sports-Market</h2>
+                        <p>Your purchase</p>
+                        <p>${req.body.products[0].name}</p>
+                        `
+                    }
+                    transporter.sendMail(options, function (error,info){
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('Message Sent: ' + info.response);
+                        }
+                    });  
                 }
                 catch(e){
                     console.log("error del catch", e)
