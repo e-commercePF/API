@@ -20,6 +20,7 @@ const orderSchema = new Schema(
         address: { type: Object, required: true},
         orderId: { type: String, required: true},
         status: { type: String, default: 'pending'},
+        email: { type: String, required: true}
     },
     { 
         timestamps: true, 

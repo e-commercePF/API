@@ -19,8 +19,9 @@ router.post('/create', authenticateJWT, (req, res) => {
             
             res.status(200).send({
                 userId: req.user._id,
+                email: req.user.email,
                 address: stripeSuccess.billing_details.address,
-                orderId: stripeSuccess.id
+                orderId: stripeSuccess.id,
             })
         }
     })
