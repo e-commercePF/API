@@ -21,7 +21,12 @@ const userSchema = new Schema(
         role: {
             type: String, // ---> "admin" "guest" "moderator"
             default: "client"
+        },
+        resetLink: {
+            data: String,
+            default: ''
         }
+
         
     }, // attributes
     { 

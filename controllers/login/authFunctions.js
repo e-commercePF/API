@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
+const _ = require('lodash')
 const jwt = require('jsonwebtoken')
 const User = require('../../models/users/User')
-const { SECRET_KEY, AUTH_GOOGLE_CLIENT, CLIENT_URL } = process.env;
+const { SECRET_KEY, AUTH_GOOGLE_CLIENT, CLIENT_URL ,RESET_PASSWORD_KEY } = process.env;
 const { transporter } = require('../users/mailer')
 
 
@@ -122,6 +123,82 @@ exports.activateAccount = async (req, res) => {
         return res.json({error: "error"})
     }
 }
+
+exports.forgotPassword = (req, res) => {
+    const {email} = req.body
+
+    User.findOne({email}, (err, user) => {
+        if (err || !user) {
+            return res.status(400).json({error: "User with this email does not exist"})
+        }
+
+        const token = jwt.sign({_id: user._id}, RESET_PASSWORD_KEY);
+
+        const options = {
+                from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
+                to: email , // list of receivers
+                subject: "Account Activation Link", // Subject line
+                html: `<h2>Please click on given link to reset your password :</h2>
+                <p>http://localhost:4000/api/auth/resetpassword/${token}</p>`
+        }
+
+        return user.updateOne({resetLink: token}, function(err, success) {
+            if (err) {
+                return res.status(400).json({error: "reset password link error"})
+            } else {
+                transporter.sendMail(options, function (error,info){
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Message Sent: ' + info.response);
+                    }
+                });  
+                res.json({
+                    message: "Email has been sent, follow the instructions" })
+            }
+        })
+
+
+    })
+}
+
+exports.resetPassword = (req, res) => {
+    const {resetLink, newPass} = req.body
+
+    if (resetLink) {
+        jwt.verify(resetLink, RESET_PASSWORD_KEY, function (error, decodedData) {
+            if (error) {
+                return res.status(401).json({
+                    error: "Incorrect or expired token"
+                })
+            }
+            User.findOne({_id:decodedData._id}, async (err, user) => {
+                if(err || !user) {
+                    return res.status(400).json({error: "User with this token does not exist."})
+                }
+                let passwordHashed = await bcrypt.hash(newPass, 10)
+                const obj = {
+                    passwordHash: passwordHashed,
+                    resetLink: ''
+                }
+
+                user = _.extend(user, obj)
+                user.save((err, result) => {
+                    if (err) {
+                        return res.status(400).json({error: "reset password error"})
+                    }else {  
+                        return res.status(200).json({message: "Your password has been changed" })
+                    }
+                })
+            })
+        })
+    } else {
+        return res.status(401).json({error: "Authentication error"})
+        
+    }
+}
+
+
 
 // Log a User with credentials || NOT GOOGLE LOGIN!
 
