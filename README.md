@@ -96,8 +96,8 @@ http://localhost:3000/api/auth/googlelogin
 
     USER - LOGIN  METHOD: POST || URL: http://localhost:3000/api/auth/signin
 Body should be like this: {
-    username: ""
-    password: ""
+    u"sername: ""
+    password: "
     }
 
     USER - GET ALL: 

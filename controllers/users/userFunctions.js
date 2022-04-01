@@ -67,7 +67,7 @@ const updateUser= async (req,res)=>{
         $set: {
             "role": updatedRole
         }
-        
+
     })
     const updatedUser = await User.findById(id)
     res.send("se cambio exitosamente el rol del usuario " + updatedUser.name + " y ahora es " + updatedRole)
