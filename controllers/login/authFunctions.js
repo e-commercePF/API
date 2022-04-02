@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const _ = require('lodash')
+const uniqid = require('uniqid');
 const jwt = require('jsonwebtoken')
 const User = require('../../models/users/User')
 const { SECRET_KEY, AUTH_GOOGLE_CLIENT, CLIENT_URL ,RESET_PASSWORD_KEY } = process.env;
@@ -42,16 +43,21 @@ exports.signup = async ( req, res) => {
     
     const { name, email, password, role} = req.body; // now username should be his email and name his username or sth like this
     console.log(req.body);
+    const  ExpRegEmail =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		
+	if(email.match(ExpRegEmail)==null){
+		return res.status(400).send({error:'Please, enter a valid email'})
+	}
     if(!name || !email || !password){
         console.log({error: "Ops! It seems there are empty fields"});
-        return res.status(400).json({error: "Ops! It seems there are empty fields"})
+        return res.status(400).send({error: "Ops! It seems there are empty fields"})
     }
     /*the body should came from the form of create user, where the form should 
     check all fields to be filled*/ 
     User.findOne({"email": email}).exec(async (err, user) => {
         console.log(err,user)
         if(user){
-            return res.status(400).json({error: "User with this email already exists."})
+            return res.status(400).send({error: "User with this email already exists."})
         }
 
         const token = jwt.sign({name, email, password}, SECRET_KEY);
@@ -198,6 +204,42 @@ exports.resetPassword = (req, res) => {
     }
 }
 
+exports.forceResetPassword = (req, res) => {
+    const { _id } = req.body;
+    const { role } = req.user;
+    if (role === 'admin') {
+        const newPass = uniqid.process();
+        console.log(newPass)
+        const passwordHashed = bcrypt.hashSync(newPass, 10);
+        console.log(passwordHashed)
+        User.findByIdAndUpdate(_id, {passwordHash: passwordHashed}, {new: true},(err, user) => {
+            if(err){
+                return res.status(400).json({error: "error"})
+            }
+            else {
+                console.log(user)
+                const options = {
+                    from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
+                    to: user.email , // list of receivers
+                    subject: "Force Reset Password", // Subject line
+                    html: `<h2>Your Password has been changed by an admin.</h2>
+                    <p>Your new password is ${newPass}</p>`
+                }
+                transporter.sendMail(options, function (error,info){
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Message Sent: ' + info.response);
+                    }
+                return res.status(200).json({message: "Your password has been changed", data: newPass, user})
+            });
+
+    }}) 
+    } else {
+        return res.status(401).json({error: "Authentication error"})
+    }
+}
+    
 
 
 // Log a User with credentials || NOT GOOGLE LOGIN!
@@ -206,13 +248,19 @@ exports.signin = async (req, res) => {
     
     const { body } = req;
     const { email, password } = body;
+    const  ExpRegEmail =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		 if( !email || !password){
+			 return res.status(400).send({error: "Please enter a valid email and password"});
+		 } if(email.match(ExpRegEmail)==null){
+			 return res.status(400).send({error: "Email is not valid"})
+		 }
     const user = await User.findOne({ email });
     const passwordCheck = user === null 
         ? false
         : await bcrypt.compare(password, user.passwordHash);
 
     if(!(user && passwordCheck)) { // if user and passwordCheck were true it wouldn't go into if.
-        return res.status(200).json({
+        return res.status(400).json({
             error: 'Invalid user or password'
         })
     }
