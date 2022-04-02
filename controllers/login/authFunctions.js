@@ -41,7 +41,8 @@ exports.authenticateJWT = (req, res, next) => {
 
 exports.signup = async ( req, res) => {
     
-    const { name, email, password, role} = req.body; // now username should be his email and name his username or sth like this
+    const { name, email, password, role, newsLetter} = req.body; // now username should be his email and name his username or sth like this
+    
     console.log(req.body);
     const  ExpRegEmail =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 		
@@ -52,6 +53,7 @@ exports.signup = async ( req, res) => {
         console.log({error: "Ops! It seems there are empty fields"});
         return res.status(400).send({error: "Ops! It seems there are empty fields"})
     }
+    
     /*the body should came from the form of create user, where the form should 
     check all fields to be filled*/ 
     User.findOne({"email": email}).exec(async (err, user) => {
@@ -60,7 +62,7 @@ exports.signup = async ( req, res) => {
             return res.status(400).send({error: "User with this email already exists."})
         }
 
-        const token = jwt.sign({name, email, password}, SECRET_KEY);
+        const token = jwt.sign({name, email, password, newsLetter}, SECRET_KEY);
 
         const options = {
                 from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
@@ -78,32 +80,19 @@ exports.signup = async ( req, res) => {
             });  
             res.json({
                         message: "Email has been sent, kindly activate your account!" })
-
-        // let passwordHash = await bcrypt.hash(password, 10)
-
-        // let newUser = new User({name, email, passwordHash, role});
-        // newUser.save((err, success)=>{
-        //     console.log(success)
-        //     if(err){
-        //         console.log("Error in signp: ", err);
-        //         return res.status(401).json({error: err})
-        //     }
-        //     res.json({
-        //         message: "Email has been sent, kindly activate your account!"
-        //     })
-        // })
-    })
+   })
 }
 
 exports.activateAccount = async (req, res) => {
     const {token} = req.params;
+    
 
     if (token) {
         jwt.verify(token, SECRET_KEY, function (err, decodedToken) {
             if (err) {
                 return res.status(400).json({ error: "Incorrect or expired link"})
             }
-            const {name, email, password, role} = decodedToken;
+            const {name, email, password, role, newsLetter} = decodedToken;
             User.findOne({"email": email}).exec(async (err, user) => {
                 console.log(err,user)
                 if(user){
@@ -112,13 +101,30 @@ exports.activateAccount = async (req, res) => {
                 
          let passwordHash = await bcrypt.hash(password, 10)
 
-         let newUser = new User({name, email, passwordHash, role});
+         let newUser = new User({name, email, passwordHash, role, newsLetter});
          newUser.save((err, success)=>{
              console.log(success)
             if(err){
                 console.log("Error in signup while account activation: ", err);
                 return res.status(401).json({ Error: "error activating error"})
+             } console.log(success.newsLetter)
+             if(success.newsLetter === true){
+                const options = {
+                    from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
+                    to: success.email , // list of receivers
+                    subject: "Newsletter", // Subject line
+                    html: `<h2>Newsletter</h2>`
+                }
+                transporter.sendMail(options, function (error,info){
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Message Sent: ' + info.response);
+                    }
+                });
+
              }
+             
              res.json({
                  message: "Signup successfull!"
              })
@@ -127,6 +133,15 @@ exports.activateAccount = async (req, res) => {
          })
     } else {
         return res.json({error: "error"})
+    }
+
+    if(newsLetter === true) {
+        User.findByIdAndUpdate(
+            id,
+            newsLetter,
+            {new: true},
+             )
+             return res.status(200).send({message: "You have been added to the newsletter"})
     }
 }
 
