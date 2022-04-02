@@ -2,62 +2,90 @@ const Order = require("../../models/orders/Order");
 const Review = require("../../models/users/Review");
 
 const createReview= async(req, res)=>{
-    const {userId, productId}= req.query   
-    const review = req.body 
-    const newReview= {
-        id_product: productId,
-        user: userId,
-        description: review.description,
-        rating: review.rating
+    const {userId, productId}= req.query 
+    let response= {
+        message:'Debe ser usuario para agregar un comentario',
+        status: false
     }
-    if(review){
-        const saveReview= await new Review(newReview)
-       
-        saveReview.save()
-        res.json(newReview)
-        console.log(saveReview)
-    } else{
-        res.status(400).json({message: `We could't process your require`})
+    if (userId){// analizo si puede hacer comentario
+        response= await statusReview(userId, productId)
+        if(response.status){ // si status es true puede hacer comentario
+            const review = req.body 
+            console.log(review)
+            if(review){
+            const newReview= {
+                id_product: productId,
+                user: userId,
+                description: review.description,
+                rating: review.rating
+            }
+            if(review){
+                const saveReview= await new Review(newReview)
+           
+                saveReview.save()
+                res.json(response.message)
+            } else{
+                res.status(400).json({message: `We could't process your require`})
+            }
+        }
+    }else{
+        res.json(response)
     }
+    }else{
+        res.json(response)
+        console.log('es falso porque no hay usuario')
+    }
+        
+    
+
+
+ 
     
     
 }
 
-const statusReview =async (reviewProduct, userId, productId)=>{
+const statusReview =async (userId, productId)=>{
+    const reviewProduct= await getReviewsProduct(productId)
     console.log('se analizo por statusReview porque existe usuario')
-    let status= ''
+    let response= {
+        message:'', 
+        status:''
+    }
     if(reviewProduct.length>0) {     
         const filteredReview=reviewProduct.filter(review=> review.user=== userId)
         if(filteredReview.length>0){
-            status=false
+            response.message='este usuario ya realizó un comentario a este producto'
+            response.status= false
             console.log(' es falso porque ya hizo un comentario')
         }else{
-            
-            status= await statusOrderProduct(userId, productId)
+            response= await statusOrderProduct(userId, productId)
             
         }
-        //reviewProduct.filter(review=> review.user=== userId).length>0?status=false:
-        //status= await statusOrderProduct(userId, productId)
     }else{
-        status= await statusOrderProduct(userId, productId)
+        response= await statusOrderProduct(userId, productId)
     }
-    return status
+    return response
 }
 const statusOrderProduct = async (userId, productId)=>{
     console.log('se analiza por statusOrder porque no hay comentario ')
-
-    const orderUser= await Order.find({userId:userId})    
-    const idProducts= orderUser.map(order=>{
+    let response= {
+        message:'', 
+        status:''
+    }
+    const orderUser= await Order.find({userId:userId})    // ordenes del usuario
+    const idProducts= orderUser.map(order=>{// los id de los prodctos de cada orden 
        const idproduct= order.products.map(product=>product.productId)
         return idproduct
     })
-    const newArray =idProducts.flat()
-    let status=newArray.some(product=> product===productId)
+    const allIdProducts =idProducts.flat() // todos los id en un solo array
+    response.status=allIdProducts.some(product=> product===productId)
+    response.status?response.message='se realizo exitosamente la review':response.message='se debe de comprar el producto para agregar un comentario'
+    
 
-   if(status)console.log(' es true por que hizo la compra del producto')
+   if(response.status)console.log(' es true por que hizo la compra del producto')
    else console.log('es false por que no compro el producto')
 
-    return status
+    return response
 
 
 }
@@ -79,21 +107,33 @@ const  getReviewsProduct= async(idproduct)=>{ // tiene qu retornar o un array co
   return reviews
 }
 
+ 
+const getReviewsByDb= async ()=>{
+    const reviewsResult= await Review.find({})
+    return reviewsResult
+ }
+ 
 const getReview= async (req, res)=>{
-   const reviewsResult= await Review.find({})
+   const reviewsResult= await getReviewsByDb()
    res.json(reviewsResult)
 }
 
-const getRatingProduct=  async(reviews)=>{// para hacerlo desde todos los prodcutos 
+const getRatingProduct=  async(id_product)=>{// para hacerlo desde todos los prodcutos 
+   const reviewsProduct= await Review.find({id_product: id_product})
    let totalRating= 0
    let suma=0
-   for(let i=0; i<reviews.length; i++){
-      suma= suma+reviews[i].rating
-   }
-   totalRating=suma/reviews.length
-   console.log(totalRating)
 
+   if(reviewsProduct){
+    for(let i=0; i<reviewsProduct.length; i++){
+        suma= suma+reviewsProduct[i].rating
+    }
+        totalRating=suma/reviewsProduct.length
+   } 
+   console.log('entro al promedio')
+   return totalRating
 }
+
+
 const getOrder= async( req, res)=>{
    
     const orders= await Order.find({})
@@ -110,5 +150,7 @@ module.exports={
     getOrder, getOrderId, 
     statusReview, 
     statusOrderProduct, 
-    getReviewsProduct
+    getReviewsProduct,
+    getReviewsByDb,
+    getRatingProduct
 }

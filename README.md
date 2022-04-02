@@ -120,6 +120,29 @@ FILTROS
 // GET || http://localhost:3000/api/products/forPage
 (especificar si o si por query la pagina que se quiere mostrar y si se quiere aplicar un filtro agregarlo tambien por query, se pueden aplicar todos juntos)
 
+REVIEWS
+
+GET || http://localhost:3000/api/products/id/:id
+(la misma ruta para obtener el detalle del producto),
+se le envía: el id por params( como actualmente está), con esto ya muestra los reviews del producto actual.
+
+
+
+// POST || http://localhost:3000/api/review/create
+para crear un comentario. 
+se envia por body:
+{
+	"rating": number, (controlar la cantidad min y max permitida, lo decimales, etc)
+	"description": String  ( controlar la cantidad maxima de caracteres.)
+}
+por query:
+userId =(el id del usuario)  si esta registrado
+productoid( el id del producto) el mismo id del producto detail
+responde con json
+{
+    message:' ', // si se hizo o no el comentario 
+    status: 
+}
 
 
 
