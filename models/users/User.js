@@ -25,6 +25,10 @@ const userSchema = new Schema(
         resetLink: {
             data: String,
             default: ''
+        },
+        newsLetter: {
+            type: Boolean,
+            default: false
         }
 
         
