@@ -1,39 +1,29 @@
 const Product = require('../../models/products/Product');
 const Category = require('../../models/products/Category');
 const Review = require('../../models/users/Review');
-const{statusReview, statusOrderProduct, getReviewsProduct}= require('../review/reviewFunctions')
+const{statusReview, getRatingProduct, getReviewsProduct}= require('../review/reviewFunctions')
 
 
-const getProducts = (req, res) => {
-    Product.find({}).then((products) =>{        
+const getProducts = async(req, res) => {
+  const products= await  Product.find({})
+
         res.json(products)
-            })
-    .catch(err => res.status(err))
+       // .catch(err => res.status(err))
 }
 
 const getProductsById = async(req, res) => {
     const { id } = req.params;
-    const { userId }= req.query // llega solo si hay un usuario 
+    //const { userId }= req.query // llega solo si hay un usuario 
     const product= await Product.findById(id)
 
     const reviews= await getReviewsProduct(id)
     product.reviews= reviews
     
-    // si no hay usuario el status review es falso. 
-    // si hay usuario entonces se verifica el estado en otra funcion 
-    if (userId){
-        product.statusReview= await statusReview(reviews,userId, id)
-        
-    }else{
-        product.statusReview=false
-        console.log('es falso porque no hay usuario')
-    }
-    if(product) {
+       if(product) {
             return res.json(product)
         } else {
             res.status(404).end()
         }
-        // busca nota por id mas facil xd
 }
 
 const getProductByName = async (req, res) => {
@@ -189,12 +179,13 @@ const getPaginatedFilters = async(req, res) => {
         response = await orderProducts(response2, name)
     }
 
-    
+    //
+
     const resultProducts= response.filter(product=> product.quantity>=1)
     if(resultProducts){
         const start= (page*productsForPage)-productsForPage
         const final= page*productsForPage
-        const totalProducts= resultProducts.slice(start, final)
+        const totalProducts= resultProducts.slice(start, final)//
         const totalPage= Math.ceil(resultProducts.length/productsForPage)
         res.json({
             totalProducts,

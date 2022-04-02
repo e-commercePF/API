@@ -15,7 +15,6 @@ const productSchema = new Schema(
         rating: Number,
         brand: String,
         reviews: Array, 
-        statusReview: Boolean
     }
 )
 
