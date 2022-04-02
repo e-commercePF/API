@@ -7,33 +7,24 @@ const createReview= async(req, res)=>{
         message:'Debe ser usuario para agregar un comentario',
         status: false
     }
-    if (userId){// analizo si puede hacer comentario
+    if (userId){
         response= await statusReview(userId, productId)
-        if(response.status){ // si status es true puede hacer comentario
-            const review = req.body 
-            console.log(review)
-            if(review){
-            const newReview= {
-                id_product: productId,
-                user: userId,
-                description: review.description,
-                rating: review.rating
-            }
-            if(review){
-                const saveReview= await new Review(newReview)
-           
+        if(response.status){ 
+           const review=newReviewFunction(req.body) 
+           if(review){
+            review.id_product= productId
+            review.user= userId
+            const saveReview= await new Review(review)           
                 saveReview.save()
                 res.json(response.message)
-            } else{
-                res.status(400).json({message: `We could't process your require`})
-            }
+            }else{
+                res.json({message:'no se guarda por que no hay comentario'})
+            }               
+        }else{ 
+        res.json(response)
         }
     }else{
         res.json(response)
-    }
-    }else{
-        res.json(response)
-        console.log('es falso porque no hay usuario')
     }
         
     
@@ -42,6 +33,16 @@ const createReview= async(req, res)=>{
  
     
     
+}
+const newReviewFunction=(reviewBody)=>{
+    if(reviewBody.hasOwnProperty('rating') && reviewBody.hasOwnProperty('description')){
+        if(reviewBody.description.length>0){ // falta controla rating
+          return reviewBody
+        }
+    }else{
+        return false
+    }
+   
 }
 
 const statusReview =async (userId, productId)=>{
