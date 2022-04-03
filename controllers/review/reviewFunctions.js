@@ -124,7 +124,7 @@ const getRatingProduct=  async(id_product)=>{// para hacerlo desde todos los pro
    let totalRating= 0
    let suma=0
 
-   if(reviewsProduct.length>0){
+   if(reviewsProduct.length>0){ 
     for(let i=0; i<reviewsProduct.length; i++){
         suma= suma+reviewsProduct[i].rating
     }

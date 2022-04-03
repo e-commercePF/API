@@ -30,7 +30,7 @@ const getProductsById = async(req, res) => {
     const reviews= await getReviewsProduct(id)
     product.reviews= reviews
     product.rating= await getRatingProduct(id)
-    
+     
        if(product) {
             return res.json(product)
         } else {
