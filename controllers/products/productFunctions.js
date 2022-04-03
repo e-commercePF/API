@@ -6,10 +6,21 @@ const{statusReview, getRatingProduct, getReviewsProduct}= require('../review/rev
 
 const getProducts = async(req, res) => {
   const products= await  Product.find({})
-
-        res.json(products)
-       // .catch(err => res.status(err))
+    for(el of products) {
+        //console.log(el.rating)
+        el.rating= await getRatingProduct(el._id, el.name)
+        
+    }
+   res.json(products)
 }
+       
+       // .catch(err => res.status(err))
+
+/*
+let settemp = new Set (temp2.flat()) 
+        for (el of settemp) {if (el) await Temperament.findOrCreate({
+            where: { name: el }})
+      }*/
 
 const getProductsById = async(req, res) => {
     const { id } = req.params;
