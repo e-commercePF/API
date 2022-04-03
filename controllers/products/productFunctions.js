@@ -7,7 +7,7 @@ const{statusReview, getRatingProduct, getReviewsProduct}= require('../review/rev
 const getProducts = async(req, res) => {
   const products= await  Product.find({})
     for(el of products) {
-        //console.log(el.rating)
+    
         el.rating= await getRatingProduct(el._id, el.name)
         
     }
@@ -29,6 +29,7 @@ const getProductsById = async(req, res) => {
 
     const reviews= await getReviewsProduct(id)
     product.reviews= reviews
+    product.rating= await getRatingProduct(id)
     
        if(product) {
             return res.json(product)
@@ -194,6 +195,9 @@ const getPaginatedFilters = async(req, res) => {
 
     const resultProducts= response.filter(product=> product.quantity>=1)
     if(resultProducts){
+        for(el of resultProducts) {    
+            el.rating= await getRatingProduct(el._id)
+        }
         const start= (page*productsForPage)-productsForPage
         const final= page*productsForPage
         const totalProducts= resultProducts.slice(start, final)//
