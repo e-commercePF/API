@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Order = require('../../models/orders/Order');
+const Product = require('../../models/products/Product');
 const { transporter } = require('../users/mailer');
 
 //STRIPE 
@@ -9,6 +10,16 @@ router.post('/', async (req, res) => {
                 res.status(200).send(order);
             } else {
                 try{ 
+                    req.body.products.forEach(p =>{
+                        Product.findByIdAndUpdate(p.productId,{ $inc: {
+                            "quantity": -p.quantity
+                        }}, {new: true}, (err, product) => {
+                            if(err){
+                                console.log(err);
+                            }
+                            console.log(product.quantity);
+                        });
+                    })
                     const newOrder = new Order(req.body);
                     const saveOrder = await newOrder.save();
                     res.status(200).send(saveOrder);
