@@ -279,7 +279,6 @@ exports.signin = async (req, res) => {
             error: 'Invalid user or password'
         })
     }
-
     const userToken = jwt.sign({
         _id: user._id,
         role: user.role,
