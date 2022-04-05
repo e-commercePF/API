@@ -343,3 +343,29 @@ exports.googlelogin = (req, res) => {
         })
     
 }
+
+
+exports.newsletter = async (req, res) => {
+    const { title, body, email} = req.body
+
+    if (!title || !body) {
+        return res.status(400).send({error: "Ops! It seems there are empty fields"})
+    }
+
+    const options = {
+        from: '"Sports-Market" <sportsmarketnl@gmail.com>', // sender address
+        to: email , // list of receivers
+        subject: title, // Subject line
+        html: body   
+    }
+
+transporter.sendMail(options, function (error,info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Message Sent: ' + info.response);
+            res.status(200).send({message: "Newsletter"})
+        }
+    });
+
+}
