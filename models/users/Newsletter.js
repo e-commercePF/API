@@ -2,9 +2,16 @@ const { Schema, model } = require('mongoose');
 
 const newsletterSchema = new Schema(
     {
-        _id: String,
-        body: String,
+        title:{
+            type: String, 
+            required: true
+        },
+        content:{
+            type: String, 
+            required: true
+        },
         email: Array,
+        date: Date,
     }
 )
 
