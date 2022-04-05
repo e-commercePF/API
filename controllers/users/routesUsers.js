@@ -3,7 +3,7 @@ const userRouter = require('express').Router();
 const User = require("../../models/users/User");
 
 const { getUsers, getUsersById, updateUser, deleteUser, adminVerify, clientVerify } = require('../../controllers/users/userFunctions')
-const {getEmails, suscribe} = require ("../../controllers/users/NewsletterFunction")
+const {getEmails, suscribe, sendNewsletter, getNewsLetter} = require ("../../controllers/users/NewsletterFunction")
 const { authenticateJWT } = require('../../controllers/login/authFunctions');
 
 // GET || http://localhost:3000/api/users
@@ -22,9 +22,16 @@ userRouter.get('/admin/verify', authenticateJWT, adminVerify)
 
 userRouter.get('/verify', authenticateJWT, clientVerify)
 
-userRouter.get('/newsletter/emails', getEmails)
+/* NEWSLETTER ROUTES  */
+// GET || http://localhost:3000/api/users/newsletter/getEmails  --> email's array
+userRouter.get('/newsletter/getEmails', getEmails)
+// GET || http://localhost:3000/api/users/newsletter/getNewsLetter --> res.data = { title: '', content: '', date: datexd, emails, _id}
+userRouter.get('/newsletter/getNewsLetter', getNewsLetter)
+// PUT || http://localhost:3000/api/users/suscribe || body = { newsLetter: true || false } && config = { headers: { Authorization: 'Bearer '+ token } }
+userRouter.put('/suscribe', authenticateJWT, suscribe)
+// POST || http://localhost:3000/api/users/sendNewsletter || body = { title: "", content: "" } 
+userRouter.post('/sendNewsletter', sendNewsletter)
 
-userRouter.put('/suscribe', suscribe)
 
 
 // POST || http://localhost:3000/api/users/send-email

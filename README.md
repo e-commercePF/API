@@ -147,6 +147,22 @@ responde con json
     status: 
 }
 
+/* NEWSLETTER ROUTES  */
+// GET || http://localhost:3000/api/users/newsletter/getEmails  
+get all emails suscribed to our newsletter.
+-> email's array
+
+// GET || http://localhost:3000/api/users/newsletter/getNewsLetter 
+get all newsletters sent to users suscribed to
+--> res.data = { title: '', content: '', date: datexd, emails, _id}
+
+// PUT || http://localhost:3000/api/users/suscribe 
+SEND ---> body = { newsLetter: true || false } && config = { headers: { Authorization: 'Bearer '+ token } }
+
+// POST || http://localhost:3000/api/users/sendNewsletter 
+SEND ---> body = { title: "", content: "" } 
+
+
 
 
 
