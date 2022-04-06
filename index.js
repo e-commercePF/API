@@ -11,7 +11,7 @@ const paymentRouter = require('./controllers/payment/stripe')
 const orderRouter = require('./controllers/payment/orders')
 const { authenticateJWT } = require('./controllers/login/authFunctions')
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 
 app.use('/api/products', productRouter)
@@ -23,8 +23,8 @@ app.use('/api/payment', paymentRouter)
 app.use('/api/orders', authenticateJWT, orderRouter)
 
 
-app.listen(process.env.PORT || 3000)
-console.log('Server on port ', 3000);
+app.listen(port, ()=> console.log('Server on port ', port))
+
 
 
 

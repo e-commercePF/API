@@ -135,14 +135,6 @@ exports.activateAccount = async (req, res) => {
         return res.json({error: "error"})
     }
 
-    if(newsLetter === true) {
-        User.findByIdAndUpdate(
-            id,
-            newsLetter,
-            {new: true},
-             )
-             return res.status(200).send({message: "You have been added to the newsletter"})
-    }
 }
 
 exports.forgotPassword = (req, res) => {
