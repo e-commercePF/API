@@ -106,7 +106,7 @@ exports.activateAccount = async (req, res) => {
              console.log(success)
             if(err){
                 console.log("Error in signup while account activation: ", err);
-                return res.status(401).json({ Error: "error activating error"})
+                return res.status(401).send({ error: "error activating error"})
              } console.log(success.newsLetter)
              if(success.newsLetter === true){
                 const options = {
@@ -135,14 +135,6 @@ exports.activateAccount = async (req, res) => {
         return res.json({error: "error"})
     }
 
-    if(newsLetter === true) {
-        User.findByIdAndUpdate(
-            id,
-            newsLetter,
-            {new: true},
-             )
-             return res.status(200).send({message: "You have been added to the newsletter"})
-    }
 }
 
 exports.forgotPassword = (req, res) => {
@@ -165,7 +157,7 @@ exports.forgotPassword = (req, res) => {
 
         return user.updateOne({resetLink: token}, function(err, success) {
             if (err) {
-                return res.status(400).json({error: "reset password link error"})
+                return res.status(400).send({error: "reset password link error"})
             } else {
                 transporter.sendMail(options, function (error,info){
                     if (error) {
@@ -195,7 +187,7 @@ exports.resetPassword = (req, res) => {
             }
             User.findOne({resetLink}, async (err, user) => {
                 if(err || !user) {
-                    return res.status(400).json({error: "User with this token does not exist."})
+                    return res.status(400).send({error: "User with this token does not exist."})
                 }
                 let passwordHashed = await bcrypt.hash(newPass, 10)
                 const obj = {
@@ -206,9 +198,9 @@ exports.resetPassword = (req, res) => {
                 user = _.extend(user, obj)
                 user.save((err, result) => {
                     if (err) {
-                        return res.status(400).json({error: "reset password error"})
+                        return res.status(400).send({error: "reset password error"})
                     }else {  
-                        return res.status(200).json({message: "Your password has been changed" })
+                        return res.status(200).send({message: "Your password has been changed" })
                     }
                 })
             })

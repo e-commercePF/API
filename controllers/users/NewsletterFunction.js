@@ -37,9 +37,9 @@ const suscribe = async (req, res) => {
        })
     } else {
         if(prueba){
-            res.send({message: "Already suscribed"})
+            res.status(400).send({error: "Already suscribed"})
         } else {
-            res.send({message:"You are not suscribed yet"})
+            res.status(400).send({error:"You are not suscribed yet"})
         }
     }
     
