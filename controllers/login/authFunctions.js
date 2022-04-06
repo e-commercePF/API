@@ -69,7 +69,7 @@ exports.signup = async ( req, res) => {
                 to: email , // list of receivers
                 subject: "Account Activation Link", // Subject line
                 html: `<h2>Please click on given link to activate your account :</h2>
-                <p>http://localhost:4000/api/auth/email-activate/${token}</p>`
+                <p>${CLIENT_URL}/api/auth/email-activate/${token}</p>`
             }
             transporter.sendMail(options, function (error,info){
                 if (error) {
@@ -132,7 +132,7 @@ exports.activateAccount = async (req, res) => {
         })
          })
     } else {
-        return res.json({error: "error"})
+        return res.json({error: "Invalid or expired token"})
     }
 
 }
@@ -152,7 +152,7 @@ exports.forgotPassword = (req, res) => {
                 to: email , // list of receivers
                 subject: "Account Activation Link", // Subject line
                 html: `<h2>Please click on given link to reset your password :</h2>
-                <p>http://localhost:4000/resetpassword/${token}</p>`
+                <p>${CLIENT_URL}/resetpassword/${token}</p>`
         }
 
         return user.updateOne({resetLink: token}, function(err, success) {
@@ -198,7 +198,7 @@ exports.resetPassword = (req, res) => {
                 user = _.extend(user, obj)
                 user.save((err, result) => {
                     if (err) {
-                        return res.status(400).send({error: "reset password error"})
+                        return res.status(400).send({error: "Reset password error"})
                     }else {  
                         return res.status(200).send({message: "Your password has been changed" })
                     }
@@ -303,7 +303,7 @@ exports.googlelogin = (req, res) => {
                                 role: user.role,
                                 email: user.email
                             }, SECRET_KEY, {expiresIn: "7d"})
-                            console.log('Login as Google User without creating again ! ')
+                            console.log('Login as Google user without creating again')
                             res.json({
                                 tokenId: token
                             })

@@ -121,7 +121,6 @@ router.put('/:orderId', async (req, res) => {
                     return res.status(500).send({error: "Internal server error"})
                 }
                 else {
-                    console.log("actualizacion y stock renoa")
                     foundOrder.products.forEach(p=>{
                         Product.findByIdAndUpdate(p.productId,{ $inc: {
                             "quantity": +p.quantity

@@ -232,26 +232,6 @@ const getPaginatedFilters = async(req, res) => {
         })
     }
 
-
-
-    
-// const filterRange = async (req, res)=> {
-//     const {minprice, maxprice } = req.query
-//     const allProducts = await Product.find({})
-    
-    
-//     if(!minprice || !maxprice){
-//         res.status(404).send({message: 'Something went wrong'})
-//     } else {
-//         const results = allProducts.filter(e => (e.price >= minprice && e.price <= maxprice))
-//         const resultPrice = results.sort((a,b) => a.price - b.price)
- 
-        
-//         return res.status(200).send(resultPrice)
-//     }     
-// }
-
-//
 const getBrands = async (req, res)=>{
     
     await Product.find({})

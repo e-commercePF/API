@@ -4,7 +4,7 @@ const Review = require("../../models/users/Review");
 const createReview= async(req, res)=>{
     const {userId, productId}= req.query 
     let response= {
-        message:'Debe ser usuario para agregar un comentario',
+        message:'You must be an user',
         status: false
     }
     if (userId){
@@ -18,7 +18,7 @@ const createReview= async(req, res)=>{
                 saveReview.save()
                 res.json(response.message)
             }else{
-                res.json({message:'no se guarda por que no hay comentario'})
+                res.json({message:'There is no comment'})
             }               
         }else{ 
         res.json(response)

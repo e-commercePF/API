@@ -33,7 +33,7 @@ const suscribe = async (req, res) => {
               if (err) {
                 return res.status(400).send({error: "Error updating user"})
               }
-               return res.status(200).send({message: "Newsletter ok"})
+               return res.status(200).send({message: "You've suscribed to the newsletter"})
        })
     } else {
         if(prueba){
