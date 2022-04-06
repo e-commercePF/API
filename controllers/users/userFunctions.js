@@ -59,7 +59,7 @@ const updateUser= async (req,res)=>{
     const role = user.role // me guardo tambien el rol que tenia antes del update
     
     if (updatedRole == undefined) {
-        res.send("ingrese un rol por body")
+        res.send("Insert role")
     }else if (updatedRole !== role ) {
         await User.updateOne({_id:id}, { // update one porque solo tiene que cambiar el valor de la propiedad de 1 solo user. 
                                             //si pongo update many cambiaria la propiedad en todos los usuarios
@@ -70,9 +70,9 @@ const updateUser= async (req,res)=>{
 
     })
     const updatedUser = await User.findById(id)
-    res.send("se cambio exitosamente el rol del usuario " + updatedUser.name + " y ahora es " + updatedRole)
+    res.send("User update successfully, now " + updatedUser.name + " is " + updatedRole)
     } else {
-        res.send("el usuario ya era " + role)
+        res.send("The user is " + role)
     }
 }
 
