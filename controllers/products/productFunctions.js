@@ -6,59 +6,45 @@ const{statusReview, getRatingProduct, getReviewsProduct}= require('../review/rev
 
 const getProducts = async(req, res) => {
 
-    const data = await Promise.all([
-        Product.find({}),
-        Review.find({})
-    ])
-    let products = data[0];
-    let reviews = data[1];
-   
-    let response = products.map(p => {
-        
-        let rating = 0
-        let review = reviews.filter(review =>{
-            if(review.id_product == p._id){
-                rating += review.rating
-                return review
-            }
-        })
-        
-        return {
-            ...p._doc,
-            rating: rating / review.length,
-            reviews: review
+    Product.find({}, (err, product) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(product);
         }
     })
-
-    return res.status(200).send(response)
-
-    // await Promise.all(productos);
-    // res.send(productos)
-
+    
 }
        
-       // .catch(err => res.status(err))
-
-/*
-let settemp = new Set (temp2.flat()) 
-        for (el of settemp) {if (el) await Temperament.findOrCreate({
-            where: { name: el }})
-      }*/
-
 const getProductsById = async(req, res) => {
-    const { id } = req.params;
-    //const { userId }= req.query // llega solo si hay un usuario 
-    const product= await Product.findById(id)
 
-    const reviews= await getReviewsProduct(id)
-    product.reviews= reviews
-    product.rating= await getRatingProduct(id)
-     
-       if(product) {
-            return res.json(product)
-        } else {
-            res.status(404).end()
-        }
+    const { id } = req.params;
+        
+        Promise.allSettled([
+            Product.find({"_id": id}),
+            Review.find({id_product: id})
+        ]) 
+        .then(data => {
+            if(data[0].reason){
+                return res.status(404).send({error: "Product not found"})
+            } else {
+                let product = data[0].value;
+                let reviews = data[1].value;
+                let rating = 0
+                let review = reviews.filter(review =>{
+                    if(review.id_product == id){
+                        rating += review.rating
+                        return review
+                    }
+                })
+                return res.status(200).send({
+                    ...product[0]._doc,
+                    rating: rating / review.length,
+                    reviews: review
+                })
+            }
+        })
+    
 }
 
 const getProductByName = async (req, res) => {
