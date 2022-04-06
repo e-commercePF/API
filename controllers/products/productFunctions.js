@@ -5,13 +5,36 @@ const{statusReview, getRatingProduct, getReviewsProduct}= require('../review/rev
 
 
 const getProducts = async(req, res) => {
-  const products= await Product.find({})
-    for(el of products) {
-    
-        el.rating= await getRatingProduct(el._id, el.name)
+
+    const data = await Promise.all([
+        Product.find({}),
+        Review.find({})
+    ])
+    let products = data[0];
+    let reviews = data[1];
+   
+    let response = products.map(p => {
         
-    }
-   res.json(products)
+        let rating = 0
+        let review = reviews.filter(review =>{
+            if(review.id_product == p._id){
+                rating += review.rating
+                return review
+            }
+        })
+        
+        return {
+            ...p._doc,
+            rating: rating / review.length,
+            reviews: review
+        }
+    })
+
+    return res.status(200).send(response)
+
+    // await Promise.all(productos);
+    // res.send(productos)
+
 }
        
        // .catch(err => res.status(err))
